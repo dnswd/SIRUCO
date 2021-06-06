@@ -80,7 +80,7 @@ class Database:
             self.cursor.execute(query)
 
             # fetch data
-            if "insert" in query.lower():
+            if "select" in query.lower():
                 rows = self.cursor.fetchall()
                 return rows[len(rows)-limit if limit else 0:]
 
