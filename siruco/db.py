@@ -1,6 +1,6 @@
-import psycopg2
-from os import getenv
 from urllib.parse import urlparse
+from os import getenv
+import psycopg2
 
 # Adapted from https://gist.github.com/goldsborough/8928226434b38f7102b3
 
@@ -30,15 +30,23 @@ class Database:
         This function manually opens a new database connection. The database
         can also be opened in the constructor or as a context manager.
         '''
-        
-        self.url = urlparse(url)
-        self.conn = psycopg2.connect(database=self.url.path[1:],
-                                     user=self.url.username,
-                                     password=self.url.password,
-                                     host=self.url.hostname,
-                                     port=self.url.port
-                                     )
-        self.cursor = self.conn.cursor()
+
+        try:
+            self.url = urlparse(url)
+            self.conn = psycopg2.connect(database=self.url.path[1:],
+                                        user=self.url.username,
+                                        password=self.url.password,
+                                        host=self.url.hostname,
+                                        port=self.url.port)
+            self.conn.autocommit=True
+            self.cursor = self.conn.cursor()
+        except psycopg2.Error as error:
+            if self.url.hostname:
+                print(f"Unable to connect to database {self.url.hostname}. " +
+                       "Please check your configuration")
+            else:
+                print(f"Unable to connect to database {self.url}. Please check your configuration")
+            print(error)
 
     def close(self):
         '''
@@ -68,14 +76,19 @@ class Database:
         self.close()
 
     def query(self, query, limit=None):
-        self.cursor.execute(query)
+        try:
+            self.cursor.execute(query)
 
-        # fetch data
-        if "insert" in query.lower():
-            rows = self.cursor.fetchall()
-            return rows[len(rows)-limit if limit else 0:]
+            # fetch data
+            if "insert" in query.lower():
+                rows = self.cursor.fetchall()
+                return rows[len(rows)-limit if limit else 0:]
 
-        return self.cursor.rowcount
+            return self.cursor.rowcount
+        except psycopg2.Error as error:
+            print(f"Can't execute query:\n{query}")
+            print(error)
+            return None
 
     def summary(self, rows):
         # split the rows into columns
@@ -83,21 +96,21 @@ class Database:
 
         # the time in terms of fractions of hours of how long ago
         # the sample was assumes the sampling period is 10 minutes
-        def time(col): return "{:.1f}".format((len(rows) - col) / 6.0)
+        time = lambda col: "{:.1f}".format((len(rows) - col) / 6.0)
 
-        # return a tuple, consisting of tuples of the maximum,
+        # return a dictionary, consisting of tuples of the maximum,
         # the minimum and the average for each column and their
         # respective time (how long ago, in fractions of hours)
         # average has no time, of course
         summary_ = {}
 
-        for c in cols:
-            summary_["hi"] = max(c)
-            summary_["hi_t"] = time(c.index(max(c)))
+        for col in cols:
+            summary_["hi"] = max(col)
+            summary_["hi_t"] = time(col.index(max(col)))
 
-            summary_["lo"] = min(c)
-            summary_["lo_t"] = time(c.index(min(c)))
+            summary_["lo"] = min(col)
+            summary_["lo_t"] = time(col.index(min(col)))
 
-            summary_["avg"] = sum(c)/len(rows)
+            summary_["avg"] = sum(col)/len(rows)
 
         return summary_
