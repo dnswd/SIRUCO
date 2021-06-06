@@ -1,4 +1,4 @@
-# django-template-heroku
+# Siruco
 
 [![Test and Deploy][actions-badge]][commits-gh]
 [![pipeline status][pipeline-badge]][commits-gl]
@@ -11,13 +11,14 @@ di-*deploy* ke Heroku melalui GitHub Actions atau GitLab CI.
 
 ## Daftar isi
 
-- [Daftar isi](#daftar-isi)
-- [Instruksi penggunaan](#instruksi-penggunaan)
-- [Lanjutan](#lanjutan)
-- [Tips pengembangan](#tips-pengembangan)
-- [Sihir macam apa ini?](#sihir-macam-apa-ini)
-- [Berkontribusi](#berkontribusi)
-- [Lisensi](#lisensi)
+- [Siruco](#siruco)
+  - [Daftar isi](#daftar-isi)
+  - [Instruksi penggunaan](#instruksi-penggunaan)
+  - [Lanjutan](#lanjutan)
+  - [Tips pengembangan](#tips-pengembangan)
+  - [Sihir macam apa ini?](#sihir-macam-apa-ini)
+  - [Berkontribusi](#berkontribusi)
+  - [Lisensi](#lisensi)
 
 ## Instruksi penggunaan
 
