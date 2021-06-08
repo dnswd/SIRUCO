@@ -4,5 +4,5 @@ from . import views
 app_name = 't2_appointment'
 
 urlpatterns = [
-    path('jadwal', views.get_jadwal, name="get_jadwal"),
+    path('jadwal-dokter', views.read_jadwal, name="read_jadwal"),
 ]

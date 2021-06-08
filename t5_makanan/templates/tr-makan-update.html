@@ -11,9 +11,9 @@
   </tr>
   <tr>
     <td>
-      <form action="/t5/tr-makan/updateTransaksiMakan" method="POST">
+      <form action="" method="POST">
         {% csrf_token %}
-        <table>
+        <table id="blockPaket">
           <tr>
             <td>
               <label for="id_h">
@@ -135,7 +135,6 @@
   </tr>
 </table>
 
-{{role}}
 <script src="{% static 'js/t5_makanan.js' %}"></script>
 
 {% endblock %}

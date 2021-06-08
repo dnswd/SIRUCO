@@ -1,18 +1,16 @@
 from django.apps import AppConfig
 from siruco.db import Database
-from dotenv import load_dotenv
 from os import getenv
 
 class MainConfig(AppConfig):
     name = 'main'
     
     def ready(self):
-        load_dotenv()
         if getenv("DATABASE_URL") == None:
-          print("Still configuring...")
+          print("Configuring Main App")
         else:
             db = Database(schema="siruco")
-            # Screate schema
+            # create schema
             db.query("""
                     CREATE TABLE IF NOT EXISTS AKUN_PENGGUNA (
                         Username VARCHAR(50),

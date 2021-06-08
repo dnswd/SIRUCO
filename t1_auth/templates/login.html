@@ -1,0 +1,47 @@
+{% extends 'base.html' %} {% load static %} {% block meta %}
+<title>
+  Log In
+</title>
+{% endblock %} {% block content %}
+
+<table border="1px solid black" align="center">
+  <tr>
+    <th>FORM LOGIN</th>
+  </tr>
+  <tr>
+    <td>
+      <form action="" method="POST">
+        {% csrf_token %}
+        <table>
+          <tr>
+            <td>
+              <label for="email">
+                Email:
+              </label>
+            </td>
+            <td>
+              <input name="email" type="text" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="username">
+                Password:
+              </label>
+            </td>
+            <td>
+              <input name="password" type="password" />
+            </td>
+          </tr>
+        </table>
+        <div style="text-align: center;">
+          <button type="submit">
+            LOGIN
+          </button>
+        </div>
+      </form>
+    </td>
+  </tr>
+</table>
+
+{% endblock %}

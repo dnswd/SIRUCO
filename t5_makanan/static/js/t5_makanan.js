@@ -3,23 +3,16 @@ $("#id_h").change(function () {
   var id = $("#id_h").val();
   if (id != "-- pilih id --") {
     $.ajax({
-      url: "/makanan/tr-makan/getKodeHotel/" + id,
+      url: "/makanan/tr-makan/getKode/" + id,
       success: function (hasil) {
         var kodeHotel = hasil.kodehotel;
         $("#kodeHotel").val(kodeHotel);
-        $.ajax({
-          url: "/makanan/tr-makan/getKodePaket/" + kodeHotel,
-          success: function (hasil) {
-            $(".kodePaket").empty();
-            $(".kodePaket").append(
-              '<option value="">-- pilih paket --</option>'
-            );
-            $.each(hasil.data, function (index, value) {
-              $(".kodePaket").append(
-                '<option value="' + value + '">' + value + "</option>"
-              );
-            });
-          },
+        $(".kodePaket").empty();
+        $(".kodePaket").append('<option value="">-- pilih paket --</option>');
+        $.each(hasil.kodepaket, function (index, value) {
+          $(".kodePaket").append(
+            '<option value="' + value + '">' + value + "</option>"
+          );
         });
       },
     });
