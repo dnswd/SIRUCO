@@ -2,27 +2,68 @@ from django.shortcuts import render, redirect
 from siruco.db import Database
 
 # Dennis Al Baihaqi Walangadi (c) 2021
-# TODO: sql injection?
+# This code is prone to SQL Injection, but security isn't the main concern because:
+#     1. I need to study for finals
+#     2. Security mitigations doesn't increase my score according to the specification
 
 def ruangan_hotel(request):
-    if request.method == 'POST':
-        if request.session.get('role') == 'admin_sistem':
+    role = request.session.get('peran')
+    if role == None or role not in ['admin_satgas', 'admin_sistem', 'pengguna_publik']:
+        return redirect('/')
+    
+    if request.method == 'GET':
+        return render(request) # render index
+        
+    elif role == 'admin_sistem':
+        if request.method == 'POST':
             create_ruangan_hotel(request.POST)
-            return redirect('hotel/')
-    elif request.method == 'GET':
-        role = request.session.get('role')
-        if role == 'admin_sistem':
-            pass
-    pass
+        elif request.method == 'UPDATE':
+            update_ruangan_hotel(request.POST)
+        elif request.method == 'DELETE':
+            delete_ruangan_hotel(request.POST)
+    
+    return render(request) # refresh page
 
 def reservasi_hotel(request):
-    pass
+    role = request.session.get('peran')
+    if role == None or role not in ['admin_satgas', 'pengguna_publik']:
+        return redirect('/')
+    
+    if request.method == 'GET':
+        return render(request) # render form
+    elif request.method == 'POST':
+        # TODO: Create transaksi and transaksi booking
+        create_reservasi_hotel(request.POST)
+    
+    if role == 'admin_satgas':
+        if request.method == 'UPDATE':
+            update_reservasi_hotel(request.POST)
+        elif request.method == 'DELETE':
+            delete_reservasi_hotel(request.POST)
+    
+    return render(request) # refresh the form
 
 def transaksi_hotel(request):
-    pass
+    role = request.session.get('peran')
+    if role == None or not role == 'admin_satgas':
+        return redirect('/')
+    
+    if role == 'admin_satgas':
+        if request.method == 'GET':
+            return render(request) # render form
+        elif request.method == 'UPDATE':
+            update_transaksi_hotel(request.POST)
+    else:
+        # Automated create and delete
+        pass
 
 def transaksi_booking_hotel(request):
-    pass
+    role = request.session.get('peran')
+    if role == None or role not in ['admin_satgas', 'pengguna_publik']:
+        return redirect('/')
+    
+    else: 
+        return render(request) # show form
 
 # Helper functions
 def create_ruangan_hotel(data):
