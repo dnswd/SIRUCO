@@ -14,12 +14,22 @@ class Database:
     write to or fetch data from the selected database.
     '''
 
-    def __init__(self, url=getenv("DATABASE_URL", None)):
+    def __init__(self, url=getenv("DATABASE_URL"), schema=None):
+        if not url:
+            return None
+        
         self.conn = None
         self.cursor = None
-
-        if url:
-            self.open(url)
+        self.open(url)
+        
+        if schema and self.cursor:
+            self.query("""
+                       CREATE SCHEMA IF NOT EXISTS %s
+                       """ %(schema))
+            self.query("""
+                       SET search_path TO %s
+                       """ %(schema))
+            self.conn.commit()
 
     def open(self, url):
         '''
@@ -34,18 +44,19 @@ class Database:
         try:
             self.url = urlparse(url)
             self.conn = psycopg2.connect(database=self.url.path[1:],
-                                        user=self.url.username,
-                                        password=self.url.password,
-                                        host=self.url.hostname,
-                                        port=self.url.port)
-            self.conn.autocommit=True
+                                         user=self.url.username,
+                                         password=self.url.password,
+                                         host=self.url.hostname,
+                                         port=self.url.port)
+            self.conn.autocommit = True
             self.cursor = self.conn.cursor()
         except psycopg2.Error as error:
             if self.url.hostname:
                 print(f"Unable to connect to database {self.url.hostname}. " +
-                       "Please check your configuration")
+                      "Please check your configuration")
             else:
-                print(f"Unable to connect to database {self.url}. Please check your configuration")
+                print(
+                    f"Unable to connect to database {self.url}. Please check your configuration")
             print(error)
 
     def close(self):
@@ -84,11 +95,11 @@ class Database:
                 rows = self.cursor.fetchall()
                 return rows[len(rows)-limit if limit else 0:]
 
-            return self.cursor.rowcount
+            return [self.cursor.rowcount]
         except psycopg2.Error as error:
             print(f"Can't execute query:\n{query}")
             print(error)
-            return None
+            return []
 
     def summary(self, rows):
         # split the rows into columns
@@ -96,7 +107,7 @@ class Database:
 
         # the time in terms of fractions of hours of how long ago
         # the sample was assumes the sampling period is 10 minutes
-        time = lambda col: "{:.1f}".format((len(rows) - col) / 6.0)
+        def time(col): return "{:.1f}".format((len(rows) - col) / 6.0)
 
         # return a dictionary, consisting of tuples of the maximum,
         # the minimum and the average for each column and their

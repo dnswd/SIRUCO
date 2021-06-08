@@ -1,0 +1,141 @@
+{% extends 'base.html' %} {% load static %} {% block meta %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<title>
+  Form Ubah Transaksi Makan
+</title>
+{% endblock %} {% block content %}
+
+<table border="1px solid black" align="center">
+  <tr>
+    <th>FORM UBAH TRANSAKSI MAKAN</th>
+  </tr>
+  <tr>
+    <td>
+      <form action="/t5/tr-makan/updateTransaksiMakan" method="POST">
+        {% csrf_token %}
+        <table>
+          <tr>
+            <td>
+              <label for="id_h">
+                <b>Id Transaksi:</b>
+              </label>
+            </td>
+            <td>
+              <input
+                name="id_h"
+                type="text"
+                readonly="readonly"
+                value="{{ result.idhotel }}"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="id_tm">
+                <b>Id Transaksi Makan:</b>
+              </label>
+            </td>
+            <td>
+              <input
+                name="id_tm"
+                type="text"
+                readonly="readonly"
+                value="{{ result.idmakan }}"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="kodeHotel">
+                <b>Kode Hotel:</b>
+              </label>
+            </td>
+            <td>
+              <input
+                name="kodeHotel"
+                type="text"
+                readonly="readonly"
+                value="{{ result.kodehotel }}"
+              />
+            </td>
+          </tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr>
+            <td>
+              <b>Pesanan Sebelumnya:</b>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <b>Kode Paket:</b>
+            </td>
+          </tr>
+          {% for p in result.paketS %}
+          <tr>
+            <td>
+              ⚫ {{ p }}
+            </td>
+          </tr>
+          {% endfor %}
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr>
+            <td>
+              <b>Pesanan Tambahan:</b>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="paket1">
+                <b>Kode Paket:</b>
+              </label>
+            </td>
+            <td>
+              <select
+                name="paket1"
+                class="kodePaket"
+                id="paket1"
+                required
+                oninvalid="alert('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!');"
+              >
+                <option value="">-- pilih paket --</option>
+                {% for p in result.paketT %}
+                <option value="{{ p }}">{{ p }}</option>
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+        </table>
+        <br />
+
+        <div style="text-align: center;">
+          <a href="#" id="tambah">TAMBAH</a>
+        </div>
+        <br />
+        <div style="text-align: center;">
+          <button type="submit">
+            SUBMIT
+          </button>
+        </div>
+      </form>
+    </td>
+  </tr>
+</table>
+
+{{role}}
+<script src="{% static 'js/t5_makanan.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <title>Jadwal</title>
+  <body>
+    {% for isi in jadwal %}
+    <tr>
+      <td>{{ isi.kode_faskes }}</td>
+      <td>{{ isi.shift }}</td>
+      <td>{{ isi.tanggal }}</td>
+    </tr>
+    {% endfor %}
+  </body>
+</html>

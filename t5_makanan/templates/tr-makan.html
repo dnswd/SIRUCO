@@ -1,0 +1,39 @@
+{% extends 'base.html' %} {% block meta %}
+<title>
+  Transaksi Makan
+</title>
+{% endblock %} {% block content %}
+
+<table border="1px solid black" align="center">
+  <tr>
+    <th>Id Transaksi Hotel</th>
+    <th>Id Transaksi Makan</th>
+    <th>Total Bayar</th>
+    <th>Action</th>
+  </tr>
+  {% for res in result %}
+  <tr>
+    <td>{{ res.idtransaksi }}</td>
+    <td>{{ res.idtransaksimakan }}</td>
+    <td>{{ res.totalbayar }}</td>
+    <td>
+      {% if res.status == "Belum Lunas" %}
+      <a
+        href="{% url 't5_makanan:tr_makan_update' id_t=res.idtransaksi id_tm=res.idtransaksimakan %}"
+        >Update</a
+      ><br />
+      <a
+        href="{% url 't5_makanan:tr_makan_delete' id_t=res.idtransaksi id_tm=res.idtransaksimakan %}"
+        >Delete</a
+      ><br />
+      {% endif %}
+      <a
+        href="{% url 't5_makanan:tr_makan_detail' id_t=res.idtransaksi id_tm=res.idtransaksimakan %}"
+        >Detail</a
+      >
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{{role}} {% endblock %}

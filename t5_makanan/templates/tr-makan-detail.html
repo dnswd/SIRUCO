@@ -1,0 +1,48 @@
+{% extends 'base.html' %} {% block meta %}
+<title>
+  Detail Transaksi Makan
+</title>
+{% endblock %} {% block content %}
+
+<table border="1px solid black" align="center">
+  <tr>
+    <th>DETAIL TRANSAKSI MAKAN</th>
+  </tr>
+  <tr>
+    <td>
+      <b>Id Transaksi:</b>
+      {{ result.idtransaksi }}
+      <br />
+      <b>Id Transaksi Makan:</b>
+      {{ result.idtransaksimakan }}
+      <br />
+      <b>Kode Hotel:</b>
+      {{ result.kodehotel }}
+      <br /><br />
+      <b>Daftar Pesanan:</b>
+      <table border="1px solid black" align="center">
+        <tr>
+          <td>Id Pesanan</td>
+          <td>Paket Makan</td>
+          <td>Harga</td>
+        </tr>
+        {% for res in result.daftarpesan %}
+        <tr>
+          <td>{{ res.idpesanan }}</td>
+          <td>{{ res.kodepaket }}</td>
+          <td>{{ res.harga }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+
+      <b>Total:</b>
+      {{ result.totalbayar }}
+      <br /><br />
+      <div style="text-align: center;">
+        <a href="{% url 't5_makanan:tr_makan' %}">Kembali</a>
+      </div>
+    </td>
+  </tr>
+</table>
+
+{{role}} {% endblock %}

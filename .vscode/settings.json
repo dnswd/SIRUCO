@@ -6,5 +6,6 @@
     "python.linting.pylintEnabled": true,
     "files.exclude": {
         "**/*.pyc": true
-    }
+    },
+    "python.linting.enabled": true
 }

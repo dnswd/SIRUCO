@@ -1,0 +1,114 @@
+{% extends 'base.html' %} {% load static %} {% block meta %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<title>
+  Form Buat Transaksi Makan
+</title>
+{% endblock %} {% block content %}
+
+<table border="1px solid black" align="center">
+  <tr>
+    <th>FORM BUAT TRANSAKSI MAKAN</th>
+  </tr>
+  <tr>
+    <td>
+      <form action="saveTransaksiMakan" method="POST">
+        {% csrf_token %}
+        <table id="blockPaket">
+          <tr>
+            <td>
+              <label for="id_h">
+                <b>Id Transaksi:</b>
+              </label>
+            </td>
+            <td>
+              <select name="id_h" id="id_h" required>
+                <option selected>-- pilih id --</option>
+                {% for res in result.idhotel %}
+                <option value="{{ res }}">{{ res }}</option>
+                {% endfor %}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="id_tm">
+                <b>Id Transaksi Makan:</b>
+              </label>
+            </td>
+            <td>
+              <input
+                name="id_tm"
+                type="text"
+                readonly="readonly"
+                value="{{ result.idmakan }}"
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="kodeHotel">
+                <b>Kode Hotel:</b>
+              </label>
+            </td>
+            <td>
+              <input
+                name="kodeHotel"
+                type="text"
+                readonly="readonly"
+                value=""
+                id="kodeHotel"
+              />
+            </td>
+          </tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr></tr>
+          <tr>
+            <td>
+              <b>Pesanan:</b>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="paket1">
+                <b>Kode Paket:</b>
+              </label>
+            </td>
+            <td>
+              <select
+                name="paket1"
+                class="kodePaket"
+                id="paket1"
+                required
+                oninvalid="alert('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!');"
+              >
+                <option value="">-- pilih paket --</option>
+              </select>
+            </td>
+          </tr>
+        </table>
+
+        <br />
+        <div style="text-align: center;">
+          <a href="#" id="tambah">TAMBAH</a>
+        </div>
+        <br />
+        <div style="text-align: center;">
+          <button type="submit">
+            SUBMIT
+          </button>
+        </div>
+      </form>
+    </td>
+  </tr>
+</table>
+
+{{role}}
+<script src="{% static 'js/t5_makanan.js' %}"></script>
+
+{% endblock %}
