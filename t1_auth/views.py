@@ -27,16 +27,17 @@ def login(request):
         return render(request, 'login.html')
 
 def dashboard(request):
-    print(session(request, 'peran'))
-    print(session(request, 'username'))
+    peran = session(request, 'peran')
+    username = session(request, 'username')
+    response = {'peran':peran, 'username':username}
     if session(request, 'peran') == 'pengguna_publik':
-      return render(request, 'dashboard.html')
+      return render(request, 'dashboard.html', response)
     elif session(request, 'peran') == 'admin_dokter':
-      return render(request, 'dashboard.html')
+      return render(request, 'dashboard.html', response)
     elif session(request, 'peran') == 'admin_sistem':
-      return render(request, 'dashboard.html')      
+      return render(request, 'dashboard.html', response)   
     elif session(request, 'peran') == 'admin_satgas':
-      return render(request, 'dashboard.html')
+      return render(request, 'dashboard.html', response)
     else :
       return redirect('/')
 
