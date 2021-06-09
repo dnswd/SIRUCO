@@ -23,4 +23,5 @@ urlpatterns = [
     path('account/', include('t1_auth.urls')),
     path('makanan/', include('t5_makanan.urls')),
     path('appointment/', include('t2_appointment.urls')),
+    path('faskes/', include('t3_faskes.urls')),
 ]

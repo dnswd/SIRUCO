@@ -58,8 +58,12 @@ def register(request):
             return response # TODO: proper redirect to form
     
     elif request.method == 'GET':
-        return render(request) # halaman milih formulir, redirect ke form masing-masing
-    
+        return render(request, 'register.html') # halaman milih formulir, redirect ke form masing-masing
+
+
+
+
+
 def logout(request):
     request.session.flush()
     request.session.clear_expired()
