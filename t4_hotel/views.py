@@ -6,14 +6,20 @@ from siruco.db import Database
 #     1. I need to study for finals
 #     2. Security mitigations doesn't increase my score according to the specification
 
+
+def index(request):
+    context = {'codes': get_hotel_codes()}
+    return render(request, "hotel_index.html", context=context)
+
+
 def ruangan_hotel(request):
     role = request.session.get('peran')
     if role == None or role not in ['admin_satgas', 'admin_sistem', 'pengguna_publik']:
-        return redirect('/')
-    
+        return redirect('t1_auth:login')
+
     if request.method == 'GET':
-        return render(request) # render index
-        
+        return render(request, 'hotel_ruangan.html')  # render index
+
     elif role == 'admin_sistem':
         if request.method == 'POST':
             create_ruangan_hotel(request.POST)
@@ -21,51 +27,65 @@ def ruangan_hotel(request):
             update_ruangan_hotel(request.POST)
         elif request.method == 'DELETE':
             delete_ruangan_hotel(request.POST)
-    
-    return render(request) # refresh page
+
+    return render(request)  # refresh page
+
 
 def reservasi_hotel(request):
     role = request.session.get('peran')
     if role == None or role not in ['admin_satgas', 'pengguna_publik']:
-        return redirect('/')
-    
+        return redirect('t1_auth:login')
+
     if request.method == 'GET':
-        return render(request) # render form
+        return render(request, 'hotel_reservasi.html')  # render form
     elif request.method == 'POST':
         # TODO: Create transaksi and transaksi booking
         create_reservasi_hotel(request.POST)
-    
+
     if role == 'admin_satgas':
         if request.method == 'UPDATE':
             update_reservasi_hotel(request.POST)
         elif request.method == 'DELETE':
             delete_reservasi_hotel(request.POST)
-    
-    return render(request) # refresh the form
+
+    return render(request)  # refresh the form
+
 
 def transaksi_hotel(request):
     role = request.session.get('peran')
     if role == None or not role == 'admin_satgas':
         return redirect('/')
-    
+
     if role == 'admin_satgas':
         if request.method == 'GET':
-            return render(request) # render form
+            return render(request)  # render form
         elif request.method == 'UPDATE':
             update_transaksi_hotel(request.POST)
     else:
         # Automated create and delete
         pass
 
+
 def transaksi_booking_hotel(request):
     role = request.session.get('peran')
     if role == None or role not in ['admin_satgas', 'pengguna_publik']:
         return redirect('/')
-    
-    else: 
-        return render(request) # show form
+
+    else:
+        return render(request)  # show form
 
 # Helper functions
+
+
+def get_hotel_codes():
+    db = Database(schema='siruco')
+    result = db.query(f'''
+                       SELECT kode FROM HOTEL;
+                       ''')
+    db.close()
+    return [item for row in result for item in row]
+
+
 def create_ruangan_hotel(data):
     db = Database(schema='siruco')
     db.query(f'''
@@ -80,6 +100,7 @@ def create_ruangan_hotel(data):
     db.close()
     return
 
+
 def read_ruangan_hotel(data):
     db = Database(schema='siruco')
     db.query('''
@@ -87,6 +108,7 @@ def read_ruangan_hotel(data):
              ''')
     db.close()
     return
+
 
 def update_ruangan_hotel(data):
     db = Database(schema='siruco')
@@ -102,6 +124,7 @@ def update_ruangan_hotel(data):
     db.close()
     return
 
+
 def delete_ruangan_hotel(data):
     db = Database(schema='siruco')
     db.query(f'''
@@ -112,6 +135,7 @@ def delete_ruangan_hotel(data):
              ''')
     db.close()
     return
+
 
 def create_reservasi_hotel(data):
     db = Database(schema='siruco')
@@ -127,6 +151,7 @@ def create_reservasi_hotel(data):
     db.close()
     return
 
+
 def read_reservasi_hotel(data):
     db = Database(schema='siruco')
     db.query(f'''
@@ -134,6 +159,7 @@ def read_reservasi_hotel(data):
              ''')
     db.close()
     return
+
 
 def update_reservasi_hotel(data):
     db = Database(schema='siruco')
@@ -150,6 +176,7 @@ def update_reservasi_hotel(data):
     db.close()
     return
 
+
 def delete_reservasi_hotel(data):
     db = Database(schema='siruco')
     db.query(f'''
@@ -160,6 +187,7 @@ def delete_reservasi_hotel(data):
              ''')
     db.close()
     return
+
 
 def create_transaksi_hotel(data):
     '''
@@ -178,6 +206,7 @@ def create_transaksi_hotel(data):
     db.close()
     return
 
+
 def read_transaksi_hotel(data):
     db = Database(schema='siruco')
     db.query(f'''
@@ -185,6 +214,7 @@ def read_transaksi_hotel(data):
              ''')
     db.close()
     return
+
 
 def update_transaksi_hotel(data):
     db = Database(schema='siruco')
@@ -202,6 +232,7 @@ def update_transaksi_hotel(data):
     db.close()
     return
 
+
 def delete_transaksi_hotel(data):
     db = Database(schema='siruco')
     db.query(f'''
@@ -211,6 +242,7 @@ def delete_transaksi_hotel(data):
              ''')
     db.close()
     return
+
 
 def create_transaksi_booking_hotel(data):
     db = Database(schema='siruco')
@@ -224,6 +256,7 @@ def create_transaksi_booking_hotel(data):
     db.close()
     return
 
+
 def read_transaksi_booking_hotel(data):
     db = Database(schema='siruco')
     db.query(f'''
@@ -231,6 +264,7 @@ def read_transaksi_booking_hotel(data):
              ''')
     db.close()
     return
+
 
 def delete_transaksi_booking_hotel(data):
     db = Database(schema='siruco')
@@ -241,4 +275,3 @@ def delete_transaksi_booking_hotel(data):
              ''')
     db.close()
     return
-

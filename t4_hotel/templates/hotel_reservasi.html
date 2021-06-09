@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<title>Reservasi Hotel | SIRUCO</title>
+<meta name="description" content="Sistem Informasi Rujukan COVID-19">
+<meta property="og:title" content="SIRUCO">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SIRUCO">
+{% endblock head %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}">
+{% endblock style %}
+
+{% block script_head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+{% endblock script_head %}
+
+{% block content %}
+<h1>Form Reservasi Hotel</h1>
+<ul>
+    <li>
+        <label for="patients">NIK Pasien:</label>
+        <select name="patients" id="patients">
+            {% for patient in patients %}
+            <option value="{{ patients }}">{{ patients }}</option>
+            {% endfor %}
+        </select>
+    </li>
+    <li>
+        <label for="tglmasuk">Tanggal Masuk:</label>
+        <input type="date" id="tglmasuk" name="tglmasuk">
+    </li>
+    <li>
+        <label for="tglkeluar">Tanggal Keluar:</label>
+        <input type="date" id="tglkeluar" name="tglkeluar">
+    </li>
+    <li>
+        <label for="hotels">Kode Hotel:</label>
+        <select name="hotels" id="hotels">
+            {% for code in codes %}
+            <option value="{{ code }}">{{ code }}</option>
+            {% endfor %}
+        </select>
+    </li>
+    <li>
+        <label for="rooms">Kode Ruangan:</label>
+        <select name="rooms" id="rooms" disabled>
+        </select>
+    </li>
+</ul>
+<button>Simpan Reservasi Hotel</button>
+
+{% endblock content %}
+
+{% block script_foot %}
+<script src={% static 'js/book_script.js' %}></script>
+{% endblock script_foot %}

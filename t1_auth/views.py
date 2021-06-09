@@ -1,43 +1,47 @@
 from django.shortcuts import render, redirect
 from siruco.db import Database
 
+
 def login(request):
     request.session.clear_expired()
     if session(request, 'peran'):
         return redirect('/')
-    
+
     if request.method == 'POST':
         username = request.POST.get('email')
         password = request.POST.get('password')
-        
-        if user := get_user(username, password) != []:
+        user = get_user(username, password)
+
+        if len(user) != 0:
+            user = user[0]
             session(request, 'nama', user[0])
             session(request, 'username', username)
             session(request, 'peran', user[1])
             if is_admin(username, password):
                 session(request, 'su', 1)
             return render(request, 'dashboard.html')
-        
+
         return render(request, 'login.html')
-    
+
     elif request.method == 'GET':
         return render(request, 'login.html')
+
 
 def register(request):
     request.session.clear_expired()
     if session(request, 'peran'):
         return redirect('/')
-        
+
     if request.method == 'POST':
-        
+
         response = render(request)
         # TODO: validation, record original form path, redirect to original form path
         username = request.POST.get('email')
         password = request.POST.get('password')
-        
+
         if nama := get_user(username, password) == '':
             status = record_new_user(request.POST)
-            
+
             if request.POST.get('peran') == 'pengguna_publik':
                 status = record_as_pengguna_publik(request.POST)
             elif request.POST.get('peran') == 'admin_dokter':
@@ -47,25 +51,29 @@ def register(request):
             elif request.POST.get('peran') == 'admin_satgas':
                 status = record_as_admin_satgas(request.POST)
             else:
-                return redirect('/') # TODO: proper redirect to form
-                
+                return redirect('/')  # TODO: proper redirect to form
+
             session(request, 'nama', request.POST.get('nama'))
             session(request, 'username', request.POST.get('email'))
             session(request, 'peran', request.POST.get('peran'))
-            return render(request) # TODO: proper redirect to homepage
-        
+            return render(request)  # TODO: proper redirect to homepage
+
         else:
-            return response # TODO: proper redirect to form
-    
+            return response  # TODO: proper redirect to form
+
     elif request.method == 'GET':
-        return render(request) # halaman milih formulir, redirect ke form masing-masing
-    
+        # halaman milih formulir, redirect ke form masing-masing
+        return render(request)
+
+
 def logout(request):
     request.session.flush()
     request.session.clear_expired()
-    return redirect('/') # redirect ke homepage
+    return redirect('t1_auth:login')  # redirect ke homepage
 
 # Helper functions
+
+
 def is_admin(username, password):
     db = Database(schema='siruco')
     admin = db.query(f'''
@@ -78,17 +86,18 @@ def is_admin(username, password):
     db.close()
     return len(admin) > 0
 
+
 def get_user(username, password):
     db = Database(schema='siruco')
     user = db.query(f'''
-                      SELECT a.nama, p.peran FROM PENGGUNA_PUBLIK a
-                      LEFT JOIN akun_pengguna p
-                        ON a.username = p.username
-                      WHERE a.username='{username}' AND
-                            p.password='{password}';
+                      SELECT username, peran FROM AKUN_PENGGUNA
+                      WHERE username='{username}' AND
+                            password='{password}';
                       ''')
-    db.close() # harus di-close
-    return user[0]
+    db.close()  # harus di-close
+    print(user)
+    return user
+
 
 def record_new_user(data):
     db = Database(schema='siruco')
@@ -101,6 +110,7 @@ def record_new_user(data):
                       ''')
     db.close()
     return result[0] > 0
+
 
 def record_as_pengguna_publik(data):
     db = Database(schema='siruco')
@@ -117,6 +127,7 @@ def record_as_pengguna_publik(data):
     db.close()
     return len(result) > 0
 
+
 def record_as_admin_dokter(data):
     db = Database(schema='siruco')
     result = db.query(f'''
@@ -132,6 +143,7 @@ def record_as_admin_dokter(data):
     db.close()
     return len(result) > 0
 
+
 def record_as_admin_sistem(data):
     db = Database(schema='siruco')
     result = db.query(f'''
@@ -141,6 +153,7 @@ def record_as_admin_sistem(data):
                       ''')
     db.close()
     return len(result) > 0
+
 
 def record_as_admin_satgas(data):
     db = Database(schema='siruco')
@@ -152,6 +165,7 @@ def record_as_admin_satgas(data):
                       ''')
     db.close()
     return len(result) > 0
+
 
 def session(http_handler, key, value=None):
     if value:
