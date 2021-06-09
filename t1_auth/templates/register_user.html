@@ -6,14 +6,14 @@
 
 <table border="1px solid black" align="center">
   <tr>
-    <th>FORM PENDAFTARAN ADMIN SISTEM</th>
+    <th>FORM PENDAFTARAN PENGGUNA PUBLIK</th>
   </tr>
   <tr>
     <td>
       <form action="{% url 't1_auth:register' %}" method="POST">
         {% csrf_token %}
         <table>
-          <input name="peran" value="admin_sistem" hidden />
+          <input name="peran" value="pengguna_publik" hidden />
           <tr>
             <td>
               <label for="email">
@@ -32,6 +32,36 @@
             </td>
             <td>
               <input name="password" type="password" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="nama">
+                Nama:
+              </label>
+            </td>
+            <td>
+              <input name="nama" type="text" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="nik">
+                NIK:
+              </label>
+            </td>
+            <td>
+              <input name="nik" type="text" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="no_hp">
+                Nomor HP:
+              </label>
+            </td>
+            <td>
+              <input name="no_hp" type="text" />
             </td>
           </tr>
         </table>

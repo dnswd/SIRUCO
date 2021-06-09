@@ -1,0 +1,98 @@
+{% extends 'base.html' %} {% load static %} {% block meta %}
+<title>
+  Log In
+</title>
+{% endblock %} {% block content %}
+
+<table border="1px solid black" align="center">
+  <tr>
+    <th>FORM PENDAFTARAN DOKTER</th>
+  </tr>
+  <tr>
+    <td>
+      <form action="{% url 't1_auth:register' %}" method="POST">
+        {% csrf_token %}
+        <table>
+          <input name="peran" value="admin_dokter" hidden />
+          <tr>
+            <td>
+              <label for="email">
+                Email:
+              </label>
+            </td>
+            <td>
+              <input name="email" type="text" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="password">
+                Password:
+              </label>
+            </td>
+            <td>
+              <input name="password" type="password" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="no_str">
+                Nomor STR:
+              </label>
+            </td>
+            <td>
+              <input name="no_str" type="text" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="nama">
+                Nama:
+              </label>
+            </td>
+            <td>
+              <input name="nama" type="text" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="no_hp">
+                Nomor HP:
+              </label>
+            </td>
+            <td>
+              <input name="no_hp" type="text" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="gelar_depan">
+                Gelar Depan:
+              </label>
+            </td>
+            <td>
+              <input name="gelar_depan" type="text" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="gelar_belakang">
+                Gelar Belakang:
+              </label>
+            </td>
+            <td>
+              <input name="gelar_belakang" type="text" />
+            </td>
+          </tr>
+        </table>
+        <div style="text-align: center;">
+          <button type="submit">
+            REGISTER
+          </button>
+        </div>
+      </form>
+    </td>
+  </tr>
+</table>
+
+{% endblock %}
