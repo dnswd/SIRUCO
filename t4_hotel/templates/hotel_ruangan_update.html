@@ -18,31 +18,27 @@
 {% endblock script_head %}
 
 {% block content %}
-<h1>Form Pembuatan Ruangan Hotel</h1>
+<h1>Form Ubah Ruangan Hotel</h1>
 <ul>
     <li>
-        <label for="hotels">Kode Hotel:</label>
-        <select name="hotels" id="hotels">
-            {% for code in codes %}
-            <option value="{{ code }}">{{ code }}</option>
-            {% endfor %}
-        </select>
+        <label for="hotel">Kode Hotel:</label>
+        <input type="text" value="{{ room.0 }}" id="hotel" name="hotel" disabled>
     </li>
     <li>
-        <label for="wktbayar">Kode Ruangan:</label>
-        <input type="text" value="RH{{ room|stringformat:"03d" }}" id="wktbayar" name="wktbayar" disabled>
+        <label for="koderoom">Kode Ruangan:</label>
+        <input type="text" value="{{ room.1 }}" id="koderoom" name="wktbayar" disabled>
     </li>
     <li>
         <label for="jenisbed">Jenis Bed:</label>
-        <input type="text" id="jenisbed" name="jenisbed">
+        <input type="text" value="{{ room.2 }}" id="jenisbed" name="jenisbed">
     </li>
     <li>
         <label for="tiperoom">Tipe:</label>
-        <input type="text" id="tiperoom" name="tiperoom">
+        <input type="text" value="{{ room.3 }}" id="tiperoom" name="tiperoom">
     </li>
     <li>
         <label for="hargaharian">Harga per Hari:</label>
-        <input type="text" id="hargaharian" name="hargaharian">
+        <input type="text" value="{{ room.4 }}" id="hargaharian" name="hargaharian">
     </li>
 </ul>
 <button>Simpan Ruangan Hotel</button>

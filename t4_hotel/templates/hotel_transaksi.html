@@ -22,33 +22,29 @@
 <ul>
     <li>
         <label for="patient">NIK Pasien:</label>
-        <input type="patient" id="patient" name="patient" disabled>
+        <input type="text" id="patient" name="patient" disabled>
     </li>
     <li>
         <label for="idtransaksi">Id Transaksi:</label>
-        <input type="date" id="idtransaksi" name="idtransaksi" disabled>
+        <input type="text" id="idtransaksi" name="idtransaksi" disabled>
     </li>
     <li>
         <label for="tglbayar">Tanggal Pembayaran:</label>
-        <input type="tglbayar" id="tglbayar" name="tglbayar" disabled>
+        <input type="date" id="tglbayar" name="tglbayar" disabled>
     </li>
     <li>
         <label for="wktbayar">Waktu Pembayaran:</label>
-        <input type="wktbayar" id="wktbayar" name="wktbayar" disabled>
+        <input type="time" id="wktbayar" name="wktbayar" disabled>
     </li>
     <li>
         <label for="totalbiaya">Total Biaya:</label>
-        <input type="totalbiaya" id="totalbiaya" name="totalbiaya" disabled>
+        <input type="text" id="totalbiaya" name="totalbiaya" disabled>
     </li>
     <li>
         <label for="statusbayar">Status Pembayaran:</label>
-        <input type="statusbayar" id="statusbayar" name="statusbayar">
+        <input type="text" id="statusbayar" name="statusbayar">
     </li>
 </ul>
 <button>Simpan Transaksi</button>
 
 {% endblock content %}
-
-{% block script_foot %}
-<script src={% static 'js/book_script.js' %}></script>
-{% endblock script_foot %}

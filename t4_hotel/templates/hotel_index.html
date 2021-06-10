@@ -18,17 +18,44 @@
 {% endblock script_head %}
 
 {% block content %}
-<h1>Hotel</h1>
+<h1>List Hotel</h1>
 <p>Menu yang tersedia:</p>
 <ul>
-    <li><a href={% url "t4_hotel:ruangan_hotel" %}>Tambah Ruangan Hotel</a></li>
+    <li><a href={% url "t4_hotel:ruangan_hotel" %}>Buat Ruangan</a></li>
     <li><a href={% url "t4_hotel:reservasi_hotel" %}>Reservasi Hotel</a></li>
     <li><a href={% url "t4_hotel:transaksi_hotel" %}>Transaksi Hotel</a></li>
     <li><a href={% url "t4_hotel:transaksi_booking_hotel" %}>Transaksi Booking Hotel</a></li>
 </ul>
 
-{% endblock content %}
+{% if hotels %}
+<h3>DAFTAR HOTEL</h3>
+<table style="width:100%">
+  <tr>
+    <th>No.</th>
+    <th>Kode Hotel</th>
+    <th>Kode Ruangan</th>
+    <th>Jenis Bed</th>
+    <th>Tipe</th>
+    <th>Harga</th>
+    {% if peran == "admin_sistem" %}<th>Action</th>{% endif %}
+  </tr>
+  {% for hotel in hotels %}
+  <tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ hotel.0 }}</td>
+    <td>{{ hotel.1 }}</td>
+    <td>{{ hotel.2 }}</td>
+    <td>{{ hotel.3 }}</td>
+    <td>{{ hotel.4 }}</td>
+    {% if peran == "admin_sistem" %}
+        <th>
+        <button><a href={% url 't4_hotel:ruangan_hotel_update' koderoom=hotel.1 %}>Update</a></button>
+        <button>Delete</button>
+        </th>
+    {% endif %}
+  </tr>
+  {% endfor %}
+</table>
+{% endif %}
 
-{% block script_foot %}
-<script src={% static 'js/book_script.js' %}></script>
-{% endblock script_foot %}
+{% endblock content %}
