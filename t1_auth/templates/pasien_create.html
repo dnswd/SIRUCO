@@ -1,0 +1,235 @@
+{% extends 'base.html' %} {% load static %}
+{% block head %}
+<title>
+    Pendaftaran Pasien
+</title>
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<table border="1px solid black" align="center">
+    <tr>
+        <th>Form Pendaftaran Pasien</th>
+    </tr>
+    <tr>
+        <td>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <table>
+                    <tr>
+                        <td>
+                            <label for="pendaftar">
+                                Pendaftar:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="pendaftar" type="text" readonly="readonly" value="{{ username }}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="nik">
+                                NIK:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="nik" type="text" required maxlength="20"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="nama">
+                                Nama:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="nama" type="text" required maxlength="50"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="noTelp">
+                                Nomor Telepon:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="noTelp" type="text" required maxlength="20"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="noHP">
+                                Nomor HP:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="noHP" type="text" required maxlength="12"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <br><br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Alamat (Sesuai KTP):
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="jalanK">
+                                Jalan:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="jalanK" type="text" required maxlength="30"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="kelurahanK">
+                                Kelurahan:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="kelurahanK" type="text" required maxlength="30"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="kecamatanK">
+                                Kecamatan:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="kecamatanK" type="text" required maxlength="30"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="kotaK">
+                                Kabupaten/Kota:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="kotaK" type="text" required maxlength="30"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="provinsiK">
+                                Provinsi:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="provinsiK" type="text" required maxlength="30"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <br><br>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Alamat (Sesuai Domisili):
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="jalanD">
+                                Jalan:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="jalanD" type="text" required maxlength="30"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="kelurahanD">
+                                Kelurahan:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="kelurahanD" type="text" required maxlength="30"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="kecamatanD">
+                                Kecamatan:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="kecamatanD" type="text" required maxlength="30"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="kotaD">
+                                Kabupaten/Kota:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="kotaD" type="text" required maxlength="30"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="provinsiD">
+                                Provinsi:
+                            </label>
+                        </td>
+                        <td>
+                            <input name="provinsiD" type="text" required maxlength="30"
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                                oninput="setCustomValidity('')">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br></td>
+                    </tr>
+                </table>
+                <div style="text-align: center;">
+                    <button type="submit">
+                        SUBMIT
+                    </button>
+                </div>
+            </form>
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

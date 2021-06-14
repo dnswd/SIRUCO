@@ -1,0 +1,104 @@
+{% extends 'base.html' %} {% load static %}
+
+{% block head %}
+<title>
+    Detail Pasien
+</title>
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<table border="1px solid black" align="center">
+    <tr>
+        <th>Detail Pasien</th>
+    </tr>
+    <tr>
+        <td>
+            <table>
+                <tr>
+                    <td>Pendaftar:</td>
+                    <td>{{ pendaftar }}</td>
+                </tr>
+                <tr>
+                    <td>NIK:</td>
+                    <td>{{ nik }}</td>
+                </tr>
+                <tr>
+                    <td>Nama:</td>
+                    <td>{{ nama }}</td>
+                </tr>
+                <tr>
+                    <td>Nomor Telepon:</td>
+                    <td>{{ notelp }}</td>
+                </tr>
+                <tr>
+                    <td>Nomor HP:</td>
+                    <td>{{ nohp }}</td>
+                </tr>
+                <tr>
+                    <td><br></td>
+                </tr>
+                <tr>
+                    <td>Alamat (Sesuai KTP):</td>
+                </tr>
+                <tr>
+                    <td> Jalan:</td>
+                    <td>{{ jalanK }}</td>
+                </tr>
+                <tr>
+                    <td> Kelurahan:</td>
+                    <td>{{ kelurahanK }}</td>
+                </tr>
+                <tr>
+                    <td> Kecamatan:</td>
+                    <td>{{ kecamatanK }}</td>
+                </tr>
+                <tr>
+                    <td> Kabupaten/Kota:</td>
+                    <td>{{ kotaK }}</td>
+                </tr>
+                <tr>
+                    <td> Provinsi:</td>
+                    <td>{{ provinsiK }}</td>
+                </tr>
+                <tr>
+                    <td><br></td>
+                </tr>
+                <tr>
+                    <td>Alamat (Domisili):</td>
+                </tr>
+                <tr>
+                    <td> Jalan:</td>
+                    <td>{{ jalanD }}</td>
+                </tr>
+                <tr>
+                    <td> Kelurahan:</td>
+                    <td>{{ kelurahanD }}</td>
+                </tr>
+                <tr>
+                    <td> Kecamatan:</td>
+                    <td>{{ kecamatanD }}</td>
+                </tr>
+                <tr>
+                    <td> Kabupaten/Kota:</td>
+                    <td>{{ kotaD }}</td>
+                </tr>
+                <tr>
+                    <td> Provinsi:</td>
+                    <td>{{ provinsiD }}</td>
+                </tr>
+                <tr>
+                    <td><br></td>
+                </tr>
+            </table>
+            <div style="text-align: center;">
+                <a href="{% url 't1_auth:pasien' %}">Kembali</a>
+            </div>
+        </td>
+    </tr>
+</table>
+
+{% endblock %}
