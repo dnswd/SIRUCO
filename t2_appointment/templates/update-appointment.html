@@ -1,0 +1,54 @@
+{% extends 'home-t2.html' %} {% load static %}
+{% block head %}
+<title>
+    Update Appointment
+</title>
+{% endblock %}
+{% block meta %}
+<link rel="stylesheet" href="{% static 'css/t2.css' %}">
+{% endblock %}
+{% block subcontent %}
+<div class="isi-form">
+    <h2>Form Ubah Appointment</h2>
+    <div>
+        <form th:action="" method="POST">
+            {% csrf_token %}
+            <div>
+                <label for="nik">NIK Pasien:</label>
+                <input type="text" name="nik" id="nik" value='{{nik}}' disabled>
+            </div>
+            <div>
+                <label for="email">Email Dokter:</label>
+                <input type="text" name="email" id="email" value='{{email}}' disabled>
+            </div>
+            <div>
+                <label for="shift">Shift Prakter:</label>
+                <input type="text" name="shift" id="shift" value='{{shift}}' disabled>
+            </div>
+            <div>
+                <label for="tanggal">Tanggal Praktek:</label>
+                <input type="text" name="tanggal" id="tanggal" value='{{tanggal}}' disabled>
+            </div>
+            <div>
+                <label for="faskes">Kode Faskes:</label>
+                <input type="text" name="faskes" id="faskes" value='{{faskes}}' disabled>
+            </div>
+            <div>
+                <label for="rekomendasi">Rekomendasi:</label>
+                <input type="text" id="cek-isi-form" name="rekomendasi" value="{{rekomendasi}}">
+            </div>
+            <div>
+                <label id="input-kosong"></label>
+            </div>
+
+            <button type="submit" id="button-submit-cek" class="btn btn-primary">Simpan
+            </button>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
+<script src="{% static 'js/t2-appointment.js' %}"></script>
+
+{% endblock %}
