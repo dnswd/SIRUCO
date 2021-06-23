@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from siruco.db import Database
+from .forms import HotelRoomForm
 
 # Dennis Al Baihaqi Walangadi (c) 2021
 # This code is prone to SQL Injection, but security isn't the main concern because:
@@ -27,14 +28,35 @@ def ruangan_hotel(request, koderoom=None):
         if koderoom:
             context = {'room': get_room_data(koderoom)}
             return render(request, 'hotel_ruangan_update.html', context=context)
-        context = {'codes': get_hotel_codes(),
-                   'room': int(get_max_hotel_room_code()[2:])+1}
+
+        hotel_room_form = HotelRoomForm(
+            initial={'kode_ruangan': new_hotel_room()})
+        hotel_room_form.fields['kode_hotel'].choices = list_to_choice_array(
+            get_hotel_codes())
+
+        context = {'form': hotel_room_form}
         # render index
         return render(request, 'hotel_ruangan.html', context=context)
 
     elif role == 'admin_sistem':
         if request.method == 'POST':
-            create_ruangan_hotel(request.POST)
+            data = {}
+            data['kode_hotel'] = kode_hotel = request.POST.get('kode_hotel')
+            # I don't have much time
+            data['kode_room'] = kode_ruangan = new_hotel_room()
+            data['jenis_bed'] = jenis_bed = request.POST.get('jenis_bed')
+            data['tipe_room'] = tipe = request.POST.get('tipe')
+            data['harga'] = harga_per_hari = request.POST.get(
+                'harga_per_hari')
+
+            if kode_hotel and kode_ruangan and jenis_bed and tipe and harga_per_hari:
+                create_ruangan_hotel(data)
+            else:
+                context = {'form': HotelRoomForm(request.POST)}
+                context['form'].fields['kode_hotel'].choices = list_to_choice_array(
+                    get_hotel_codes())
+                return render(request, 'hotel_ruangan.html', context=context)
+
         elif request.method == 'UPDATE':
             update_ruangan_hotel(request.POST)
         elif request.method == 'DELETE':
@@ -89,6 +111,17 @@ def transaksi_booking_hotel(request):
 # Helper functions
 
 
+def new_hotel_room():
+    return 'RH%03d' % (int(get_max_hotel_room_code()[2:])+1)
+
+
+def list_to_choice_array(lst):
+    ret = []
+    for data in lst:
+        ret.append((data, data))
+    return ret
+
+
 def list_hotel_rooms():
     db = Database(schema='siruco')
     result = db.query(f'''
@@ -141,8 +174,8 @@ def create_ruangan_hotel(data):
              INSERT INTO HOTEL_ROOM(KodeHotel,KodeRoom,JenisBed,Tipe,Harga) VALUES (
                  '{data.get('kode_hotel')}',
                  '{data.get('kode_room')}',
-                 '{data.get('jenis_bed')}',
-                 '{data.get('tipe_room')}',
+                 '{data.get('jenis_bed').upper()}',
+                 '{data.get('tipe_room').upper()}',
                  '{data.get('harga')}'
              );
              ''')
