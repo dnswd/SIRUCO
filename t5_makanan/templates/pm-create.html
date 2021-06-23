@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Form Buat Paket Makan</title>
+{% endblock %}
+
+{% block content %}
+
+<table border="1px solid black" align="center">
+    <tr>
+        <th>FORM BUAT PAKET MAKAN</th>
+    </tr>
+    <tr>
+        <td>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <table>
+                    <tr>
+                        <td>
+                            <label for="kodeH">
+                                <b>Kode Hotel:</b>
+                            </label>
+                        </td>
+                        <td>
+                            <select name="kodeH" required
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!')"
+                                oninput="setCustomValidity('')">
+                                <option selected value="">-- pilih id --</option>
+                                {% for res in result %}
+                                <option value="{{ res }}">{{ res }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="kodeP">
+                                <b>Kode Paket:</b>
+                            </label>
+                        </td>
+                        <td>
+                            <input name="kodeP" type="text" maxlength="5" required
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!')"
+                                oninput="setCustomValidity('')" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="namaP">
+                                <b>Nama Paket:</b>
+                            </label>
+                        </td>
+                        <td>
+                            <input name="namaP" type="text" maxlength="20" required
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!')"
+                                oninput="setCustomValidity('')" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="harga">
+                                <b>Harga:</b>
+                            </label>
+                        </td>
+                        <td>
+                            <input name="harga" type="number" required
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!')"
+                                oninput="setCustomValidity('')" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br></td>
+                    </tr>
+                </table>
+                <div style="text-align: center;">
+                    <button type="submit">
+                        SUBMIT
+                    </button>
+                </div>
+            </form>
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

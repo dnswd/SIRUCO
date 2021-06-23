@@ -1,9 +1,15 @@
-{% extends 'base.html' %} {% load static %} {% block meta %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<title>Form Ubah Transaksi Makan</title>
+{% endblock %}
+
+{% block script_head %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<title>
-  Form Ubah Transaksi Makan
-</title>
-{% endblock %} {% block content %}
+{% endblock script_head %}
+
+{% block content %}
 
 <table border="1px solid black" align="center">
   <tr>
@@ -21,12 +27,7 @@
               </label>
             </td>
             <td>
-              <input
-                name="id_h"
-                type="text"
-                readonly="readonly"
-                value="{{ result.idhotel }}"
-              />
+              <input name="id_h" type="text" readonly="readonly" value="{{ result.idhotel }}" />
             </td>
           </tr>
           <tr>
@@ -36,12 +37,7 @@
               </label>
             </td>
             <td>
-              <input
-                name="id_tm"
-                type="text"
-                readonly="readonly"
-                value="{{ result.idmakan }}"
-              />
+              <input name="id_tm" type="text" readonly="readonly" value="{{ result.idmakan }}" />
             </td>
           </tr>
           <tr>
@@ -51,12 +47,7 @@
               </label>
             </td>
             <td>
-              <input
-                name="kodeHotel"
-                type="text"
-                readonly="readonly"
-                value="{{ result.kodehotel }}"
-              />
+              <input name="kodeHotel" type="text" readonly="readonly" value="{{ result.kodehotel }}" />
             </td>
           </tr>
           <tr></tr>
@@ -84,14 +75,9 @@
             </td>
           </tr>
           {% endfor %}
-          <tr></tr>
-          <tr></tr>
-          <tr></tr>
-          <tr></tr>
-          <tr></tr>
-          <tr></tr>
-          <tr></tr>
-          <tr></tr>
+          <tr>
+            <td><br></td>
+          </tr>
           <tr>
             <td>
               <b>Pesanan Tambahan:</b>
@@ -104,13 +90,9 @@
               </label>
             </td>
             <td>
-              <select
-                name="paket1"
-                class="kodePaket"
-                id="paket1"
-                required
-                oninvalid="alert('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!');"
-              >
+              <select name="paket1" class="kodePaket" id="paket1" required
+                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!')"
+                oninput="setCustomValidity('')">
                 <option value="">-- pilih paket --</option>
                 {% for p in result.paketT %}
                 <option value="{{ p }}">{{ p }}</option>
@@ -135,6 +117,8 @@
   </tr>
 </table>
 
-<script src="{% static 'js/t5_makanan.js' %}"></script>
-
 {% endblock %}
+
+{% block script_foot %}
+<script src="{% static 'js/t5_makanan.js' %}"></script>
+{% endblock script_foot %}
