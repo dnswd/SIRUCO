@@ -45,6 +45,8 @@ $(document).ready(function () {
                 success: function (data) {
                     var items = data.list_kodeRuangan;
                     console.log(items);
+                    $('.opsi-ruangan').empty();
+                    $('.opsi-ruangan').append('<option selected></option>');
                     for (var i = 0; i < items.length; i++) {
                         console.log(items[i].kodeRuangan);
                         $('.opsi-ruangan').append('<option value="' + items[i].kodeRuangan + '">' + items[i].kodeRuangan + '</option>');

@@ -24,7 +24,8 @@
             <td>{{j.kode_faskes}}</td>
             <td>{{j.shift}}</td>
             <td>{{j.tanggal}}</td>
-            <td class="tds"><a href="{% url 't2_appointment:create_jadwal' %}">Create</a>
+            <td class="tds"><a
+                    href="{% url 't2_appointment:post_jadwal' faskes=j.kode_faskes shift=j.shift tanggal=j.tanggal %}">Create</a>
             </td>
         </tr>
         {% endfor %}

@@ -2,62 +2,72 @@ from django.http import JsonResponse
 from django.shortcuts import render,redirect
 from siruco.db import Database
 
-# Create your views here.
+def index(request):
+    role = request.session.get('peran')
+    if not role:
+        return redirect('/account/login')
+    else:
+        data = {"role" : role}
+        return render(request, "index.html", data)
 
 def create_jadwal(request):
     db = Database(schema='siruco')
-    data = {}
 
+    username = request.session.get('username')
     role = request.session.get('peran')
-    if(role != 'admin_dokter'):
+    if(role != 'admin_dokter' and role != 'admin_sistem'):
         return redirect("/")
 
-    if(request.method == 'GET'):
-        list_jadwal = db.query(f'''
-                                SELECT *
-                                FROM JADWAL
-                                WHERE (kode_faskes, shift, tanggal)
-                                NOT IN (SELECT kode_faskes, shift, tanggal
-                                FROM JADWAL_DOKTER);
-                                ''')
-        list_jadwal = [{
-        "no" : list_jadwal.index(v) + 1,
-        "kode_faskes" : v[0],
-        "shift" : v[1],
-        "tanggal" : v[2]
-        } for v in list_jadwal]
-        data = {
-            "jadwal" : list_jadwal
-        }
-        db.close()
-
-    elif(request.method == 'POST'):
-        username = request.session.get('username')
-        faskes = request.POST.get('faskes')
-        shift = request.POST.get('shift')
-        tanggal = request.POST.get('tanggal')
-        no_str = db.query(f'''
-                            SELECT D.no_str
-                            FROM DOKTER D, ADMIN A, AKUN_PENGGUNA AP
-                            WHERE AP.username = '{username}'
-                            AND A.username = AP.username
-                            AND D.username = A.username;
+    list_jadwal = db.query(f'''
+                            SELECT *
+                            FROM JADWAL
+                            WHERE (kode_faskes, shift, tanggal)
+                            NOT IN (SELECT kode_faskes, shift, tanggal
+                            FROM JADWAL_DOKTER where username = '{username}');
                             ''')
-        db.query("""
-            INSERT INTO JADWAL_DOKTER
-            VALUES('%s','%s','%s','%s','%s',0);
-        """ % (no_str, username, faskes, shift, tanggal))
-        db.close()
-        return redirect('/appointment/jadwal')
+    list_jadwal = [{
+    "no" : list_jadwal.index(v) + 1,
+    "kode_faskes" : v[0],
+    "shift" : v[1],
+    "tanggal" : v[2]
+    } for v in list_jadwal]
+    data = {
+        "jadwal" : list_jadwal,
+        "role" : role
+    }
+    db.close()
 
     return render(request, "create-jadwal.html", data)
+
+def post_jadwal(request, faskes, shift, tanggal):
+    db = Database(schema='siruco')
+    username = request.session.get('username')
+    no_str = db.query(f'''
+                        SELECT D.nostr
+                        FROM DOKTER D, ADMIN A, AKUN_PENGGUNA AP
+                        WHERE AP.username = '{username}'
+                        AND A.username = AP.username
+                        AND D.username = A.username;
+                        ''')
+    no_str = [{
+    "r" : v[0]
+    } for v in no_str]
+    no_str = no_str[0].get("r")
+    db.query("""
+        INSERT INTO JADWAL_DOKTER
+        VALUES('%s','%s','%s','%s','%s',0);
+    """ % (no_str, username, faskes, shift, tanggal))
+    db.close()
+    return redirect("/appointment/jadwal-dokter")
 
 def read_jadwal(request):
     db = Database(schema='siruco')
     username = request.session.get('username')
     role = request.session.get('peran')
     query = ''
-    if(role == 'admin_dokter'):
+    if(role == None):
+        return redirect('/')
+    elif(role == 'admin_dokter'):
         query = "SELECT * FROM JADWAL_DOKTER WHERE username = '" + username + "';"
     else:
         query = "SELECT * FROM JADWAL_DOKTER;"
@@ -72,7 +82,8 @@ def read_jadwal(request):
         "jml_pasien" : v[5]
     } for v in list_jadwal]
     data = {
-        "jadwal" : list_jadwal
+        "jadwal" : list_jadwal,
+        "role" : role
     }
     db.close()
 
@@ -82,7 +93,7 @@ def create_appointment(request):
     db = Database(schema='siruco')
     
     role = request.session.get('peran')
-    if(role == 'admin_dokter'):
+    if(role == 'admin_dokter' or role == None):
         return redirect("/")
 
     list_jadwal = db.query("SELECT * FROM JADWAL_DOKTER;")
@@ -96,7 +107,8 @@ def create_appointment(request):
         "tanggal" : v[4]
     } for v in list_jadwal]
     data = {
-        "jadwal" : list_jadwal
+        "jadwal" : list_jadwal,
+        "role" : role
     }
     db.close()
 
@@ -108,35 +120,61 @@ def form_appointment(request, email, faskes, tanggal, shift):
     username = request.session.get('username')
     role = request.session.get('peran')
 
-    if(role == 'admin_dokter'):
+    if(role == 'admin_dokter' or role == None):
         return redirect("/")
     elif(role == 'pengguna_publik'):
-        list_nik_pasien = db.query(f"SELECT NIK FROM PASIEN WHERE IdPendaftar = '{username}';")
+        list_nik_pasien = db.query(f"""
+            SELECT NIK FROM PASIEN WHERE IdPendaftar = '{username}'
+            AND NIK NOT IN 
+            (SELECT NIK_Pasien FROM MEMERIKSA
+            WHERE Username_dokter = '{email}' AND Kode_faskes = '{faskes}'
+            AND Praktek_shift = '{shift}' AND Praktek_tgl = '{tanggal}');
+        """)
     else:
-        # admin satgas
-        list_nik_pasien = db.query('SELECT NIK FROM PASIEN;')
+        list_nik_pasien = db.query(f"""
+            SELECT NIK FROM PASIEN WHERE NIK NOT IN 
+            (SELECT NIK_Pasien FROM MEMERIKSA
+            WHERE Username_dokter = '{email}' AND Kode_faskes = '{faskes}'
+            AND Praktek_shift = '{shift}' AND Praktek_tgl = '{tanggal}');
+        """)
     
 
     list_nik_pasien = [{
         "nik" : v[0]
     } for v in list_nik_pasien]
 
+    no_str = db.query(f'''
+                        SELECT D.nostr
+                        FROM DOKTER D, ADMIN A, AKUN_PENGGUNA AP
+                        WHERE AP.username = '{email}'
+                        AND A.username = AP.username
+                        AND D.username = A.username;
+                        ''')
+    no_str = [{
+    "r" : v[0]
+    } for v in no_str]
+    no_str = no_str[0].get("r")
+
     data = {
         "list_nik" : list_nik_pasien,
         "email" : email,
         "faskes" : faskes,
         "tanggal" : tanggal,
-        "shift" : shift
+        "shift" : shift,
+        "role" : role
     }
 
     if(request.method == 'POST'):
-        # todo : cek trigger >= 30 pasien
         nik = request.POST.get('nik')
-        db.query("""
+        output = db.query("""
             INSERT INTO MEMERIKSA VALUES
-            ('%s','%s','%s','%s','%s',NULL);
-        """ % (nik, email, faskes, tanggal, shift))
-        return redirect('/appointment/read-appointment')
+            ('%s','%s','%s','%s','%s','%s',NULL);
+        """ % (nik, no_str, email, faskes, shift, tanggal))
+        if(output != []):
+            db.close()
+            return redirect('/appointment/read-appointment')
+        else:
+            data["note"] = "error"
 
     db.close()
     return render(request, 'form-appointment.html', data)
@@ -147,7 +185,9 @@ def read_appointment(request):
     role = request.session.get('peran')
 
     list_appointment = []
-    if(role == 'pengguna_publik'):
+    if(role == None):
+        return redirect('/')
+    elif(role == 'pengguna_publik'):
         list_appointment = db.query(f"""
             SELECT * FROM MEMERIKSA LEFT JOIN 
             (SELECT NIK, IdPendaftar FROM PASIEN) as P ON NIK_Pasien = NIK
@@ -181,8 +221,10 @@ def read_appointment(request):
 
 def update_appointment(request, nik, email, shift, tanggal, faskes):
     db = Database(schema='siruco')
-    
-    # usenamenya dokter itu email, isi attr Username_Dokter = email
+
+    role = request.session.get('peran')
+    if(role != 'admin_dokter' and role != 'admin_sistem'):
+        return redirect('/')
 
     rekomendasi = db.query(f"""
         SELECT rekomendasi FROM MEMERIKSA
@@ -203,7 +245,8 @@ def update_appointment(request, nik, email, shift, tanggal, faskes):
         'shift' : shift,
         'tanggal' : tanggal,
         'faskes' : faskes,
-        'rekomendasi' : rekomendasi
+        'rekomendasi' : rekomendasi,
+        'role' : role
     }
 
     if(request.method == 'POST'):       
@@ -222,6 +265,9 @@ def update_appointment(request, nik, email, shift, tanggal, faskes):
 
 def delete_appointment(request, nik, email, faskes, shift, tanggal):
     db = Database(schema='siruco')
+    role = request.session.get('peran')
+    if(role != 'admin_satgas' and role != 'admin_sistem'):
+        return redirect('/')
     db.query(f"""
         DELETE FROM MEMERIKSA
         WHERE NIK_Pasien = '{nik}' AND Username_Dokter = '{email}'
@@ -235,7 +281,7 @@ def create_ruangan_rs(request):
     db = Database(schema='siruco')
 
     role = request.session.get('peran')
-    if(role != 'admin_satgas'):
+    if(role != 'admin_satgas' and role != 'admin_sistem'):
         return redirect("/")
 
     list_kodeRS = db.query(f"""
@@ -247,7 +293,8 @@ def create_ruangan_rs(request):
 
     data = {
         "list_kodeRS" : list_kodeRS,
-        "kodeRuangan" : 'Rxx'
+        "kodeRuangan" : 'Rxx',
+        "role" : role
     }
 
     if(request.method == 'POST'):
@@ -286,7 +333,7 @@ def create_bed_rs(request):
     db = Database(schema='siruco')
 
     role = request.session.get('peran')
-    if(role != 'admin_satgas'):
+    if(role != 'admin_satgas' and role != 'admin_sistem'):
         return redirect("/")
 
     list_kodeRS = db.query(f"""
@@ -298,7 +345,8 @@ def create_bed_rs(request):
 
     data = {
         'list_kodeRS' : list_kodeRS,
-        'kodeBed' : 'Bxx'
+        'kodeBed' : 'Bxx',
+        'role' : role
     }
 
     if (request.method == 'POST'):
@@ -336,7 +384,7 @@ def get_next_bed(request, kodeRS, kodeRuangan):
         WHERE KodeRS= '{kodeRS}' AND KodeRuangan = '{kodeRuangan}';
     """)
     kodeBed = [{
-        "r" : v[0]
+        "r" : v[0] if v[0] != None else '0001'
     } for v in kodeBed]
     kodeBed = kodeBed[0].get("r")
 
@@ -351,10 +399,9 @@ def read_ruangan_rs(request):
     db = Database(schema='siruco')
 
     role = request.session.get('peran')
-    if(role != 'admin_satgas'):
+    if(role != 'admin_satgas' and role != 'admin_sistem'):
         return redirect("/")
 
-    # list_ruangan_rs = db.query('SELECT * FROM RUANGAN_RS;')
     list_ruangan_rs = db.query("""
         SELECT KodeRS, KodeRuangan, tipe, jmlBed, 'Rp'||TO_CHAR(harga, 'FM999G999G999G999G999')
         FROM RUANGAN_RS;
@@ -368,7 +415,8 @@ def read_ruangan_rs(request):
         "harga" : v[4]
     } for v in list_ruangan_rs]
     data = {
-        "list_ruang" : list_ruangan_rs
+        "list_ruang" : list_ruangan_rs,
+        "role" : role
     }
     db.close()
     return render(request, "read-ruangan-rs.html", data)
@@ -377,7 +425,7 @@ def read_bed_rs(request):
     db = Database(schema='siruco')
 
     role = request.session.get('peran')
-    if(role != 'admin_satgas'):
+    if(role != 'admin_satgas' and role != 'admin_sistem'):
         return redirect("/")
 
 
@@ -406,7 +454,8 @@ def read_bed_rs(request):
 
     data = {
         "delete" : delete,
-        "nodelete" : nodelete
+        "nodelete" : nodelete,
+        "role" : role
     }
     db.close()
     return render(request, "read-bed-rs.html", data)
@@ -415,7 +464,7 @@ def update_ruangan_rs(request, kodeRS, kodeRuangan):
     db = Database(schema='siruco')
 
     role = request.session.get('peran')
-    if(role != 'admin_satgas'):
+    if(role != 'admin_satgas' and role != 'admin_sistem'):
         return redirect("/")
 
     tipe_harga = db.query(f"""
@@ -433,7 +482,8 @@ def update_ruangan_rs(request, kodeRS, kodeRuangan):
         "kodeRS" : kodeRS,
         "kodeRuangan" : kodeRuangan,
         "tipe" : tipe,
-        "harga" : harga
+        "harga" : harga,
+        "role" : role
     }
 
     if(request.method == 'POST'):
@@ -452,7 +502,7 @@ def delete_bed_rs(request, kodeRS, kodeRuangan, kodeBed):
     db = Database(schema='siruco')
 
     role = request.session.get('peran')
-    if(role != 'admin_satgas'):
+    if(role != 'admin_satgas' and role != 'admin_sistem'):
         return redirect("/")
 
     db.query(f"""

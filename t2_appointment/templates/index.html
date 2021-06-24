@@ -1,0 +1,31 @@
+{% extends 'home-t2.html' %} {% load static %}
+{% block head %}
+<title>
+    Appointment - SIRUCO
+</title>
+{% endblock %}
+{% block meta %}
+<link rel="stylesheet" href="{% static 'css/t2.css' %}">
+{% endblock %}
+{% block subcontent %}
+<h2>Rumah Sakit</h2>
+<ul>
+    {% if role == 'admin_dokter' or role == 'admin_sistem' %}
+    <li><a href="{% url 't2_appointment:create_jadwal' %}">Buat Jadwal Dokter</a></li>
+    {% endif %}
+    <li><a href="{% url 't2_appointment:read_jadwal' %}">List Jadwal Dokter</a></li>
+    {% if role == 'admin_satgas' or role == 'admin_sistem' %}
+    <li><a href="{% url 't2_appointment:create_ruangan_rs' %}">Buat Ruangan RS</a></li>
+    <li><a href="{% url 't2_appointment:read_ruangan_rs' %}">List Ruangan RS</a></li>
+    <li><a href="{% url 't2_appointment:create_bed_rs' %}">Buat Bed RS</a></li>
+    <li><a href="{% url 't2_appointment:read_bed_rs' %}">List Bed RS</a></li>
+    {% endif %}
+</ul>
+<h2>Pasien</h2>
+<ul>
+    {% if role != 'admin_dokter' %}
+    <li><a href="{% url 't2_appointment:create_appointment' %}">Buat Appointment</a></li>
+    {% endif %}
+    <li><a href="{% url 't2_appointment:read_appointment' %}">List Appointment</a></li>
+</ul>
+{% endblock %}

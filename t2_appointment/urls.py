@@ -4,8 +4,10 @@ from . import views
 app_name = 't2_appointment'
 
 urlpatterns = [
+    path('', views.index, name="index"),
     path('jadwal-dokter', views.read_jadwal, name="read_jadwal"),
     path('create-jadwal', views.create_jadwal, name="create_jadwal"),
+    path('post-jadwal/<str:faskes>/<str:shift>/<str:tanggal>', views.post_jadwal, name="post_jadwal"),
     path('create-appointment', views.create_appointment, name="create_appointment"),
     path('form-appointment/<str:email>/<str:faskes>/<str:tanggal>/<str:shift>', views.form_appointment, name="form_appointment"),
     path('read-appointment', views.read_appointment, name="read_appointment"),

@@ -39,7 +39,12 @@
                 <input type="text" name="shift" value={{shift}} disabled>
             </div>
             <div>
-                <label id="input-kosong"></label>
+                <label id="input-kosong">
+                    {% if note is not None %}Silahkan pilih shift dan tanggal lainnya, karena shift dan tanggal yang
+                    dipilih sudah
+                    penuh
+                    {% endif %}
+                </label>
             </div>
 
             <button type="submit" id="button-submit-cek" class="btn btn-primary">Simpan
