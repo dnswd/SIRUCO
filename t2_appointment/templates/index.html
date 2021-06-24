@@ -10,11 +10,11 @@
 {% block subcontent %}
 <h2>Rumah Sakit</h2>
 <ul>
-    {% if role == 'admin_dokter' or role == 'admin_sistem' %}
+    {% if role == 'admin_dokter'%}
     <li><a href="{% url 't2_appointment:create_jadwal' %}">Buat Jadwal Dokter</a></li>
     {% endif %}
     <li><a href="{% url 't2_appointment:read_jadwal' %}">List Jadwal Dokter</a></li>
-    {% if role == 'admin_satgas' or role == 'admin_sistem' %}
+    {% if role == 'admin_satgas'%}
     <li><a href="{% url 't2_appointment:create_ruangan_rs' %}">Buat Ruangan RS</a></li>
     <li><a href="{% url 't2_appointment:read_ruangan_rs' %}">List Ruangan RS</a></li>
     <li><a href="{% url 't2_appointment:create_bed_rs' %}">Buat Bed RS</a></li>
