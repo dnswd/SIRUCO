@@ -21,7 +21,7 @@
 		<h2>Hotel</h2>
 		<ol>
 			<li>Buat Hotel</li>
-			<li>List Hotel</li>
+			<li><a href={% url "t4_hotel:hotel_index" %}>List Hotel</a></li>
 			<li>Buat Ruangan Hotel</li>
 			<li>List Ruangan Hotel</li>
 			<li>Buat Paket Makan</li>
@@ -49,7 +49,7 @@
 	<li>
 		<h2>Hotel</h2>
 		<ol>
-			<li>List Hotel</li>
+			<li><a href={% url "t4_hotel:hotel_index" %}>List Hotel</a></li>
 			<li>List Ruangan Hotel</li>
 			<li>List Paket Makan</li>
 			<li>Buat Reservasi Hotel</li>
@@ -117,7 +117,7 @@
 	<li>
 		<h2>Hotel</h2>
 		<ol>
-			<li>List Hotel</li>
+			<li><a href={% url "t4_hotel:hotel_index" %}>List Hotel</a></li>
 			<li>List Ruangan Hotel</li>
 			<li>List Paket Makan</li>
 			<li>Buat Reservasi Hotel</li>
@@ -139,5 +139,8 @@
 
 </ul>
 
+<a href="{% url 'main:home' %}" class="p-3">
+	<button class="btn btn-primary" type="button">Back</button>
+</a>
 
 {% endblock content %}

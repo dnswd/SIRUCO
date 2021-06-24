@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 {% endblock %} {% block content %}
-<div class="navbar justify-content-center">
+<div class="navbar">
   <ul class="nav nav-pills">
     <li class="nav-item">
       <a class="nav-link" href="{% url 'main:home' %}">Home</a>
@@ -21,26 +21,28 @@
       <a class="nav-link" href="{% url 't3_faskes:index' %}">Faskes</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{% url 't4_hotel:ruangan_hotel' %}">Hotel</a>
+      <a class="nav-link" href="{% url 't4_hotel:hotel_index' %}">Hotel</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="{% url 't5_makanan:tr_makan' %}">Makanan</a>
     </li>
-    <!-- #TODO : FLOAT RIGHT -->
-    <!-- #TODO : NOT LOGIN -->
+  </ul>
+  <ul class="nav nav-pills ml-auto">
+    {% if not isLogin %}
     <li class="nav-item">
       <a class="nav-link" href="{% url 't1_auth:login' %}">Login</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="{% url 't1_auth:register' %}">Register</a>
     </li>
-    <!-- #TODO : HAS LOGIN -->
+    {% else %}
     <li class="nav-item">
       <a class="nav-link" href="{% url 't1_auth:dashboard' %}">Dashboard</a>
     </li>
     <li class="nav-item">
       <a class="nav-link" href="{% url 't1_auth:logout' %}">Logout</a>
     </li>
+    {% endif %}
   </ul>
 </div>
 

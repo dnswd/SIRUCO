@@ -8,17 +8,29 @@ from siruco.db import Database
 
 
 def index(request):
-    context = {'codes': get_hotel_codes()}
-    return render(request, "hotel_index.html", context=context)
-
-
-def ruangan_hotel(request):
     role = request.session.get('peran')
     if role == None or role not in ['admin_satgas', 'admin_sistem', 'pengguna_publik']:
         return redirect('t1_auth:login')
 
+    hotels = list_hotel_rooms()
+    context = {'hotels': hotels if len(hotels) > 0 else False,
+               'peran': request.session['peran']}
+    return render(request, 'hotel_index.html', context=context)
+
+
+def ruangan_hotel(request, koderoom=None):
+    role = request.session.get('peran')
+    if role == None or role != 'admin_sistem':
+        return redirect('t1_auth:login')
+
     if request.method == 'GET':
-        return render(request, 'hotel_ruangan.html')  # render index
+        if koderoom:
+            context = {'room': get_room_data(koderoom)}
+            return render(request, 'hotel_ruangan_update.html', context=context)
+        context = {'codes': get_hotel_codes(),
+                   'room': int(get_max_hotel_room_code()[2:])+1}
+        # render index
+        return render(request, 'hotel_ruangan.html', context=context)
 
     elif role == 'admin_sistem':
         if request.method == 'POST':
@@ -28,7 +40,7 @@ def ruangan_hotel(request):
         elif request.method == 'DELETE':
             delete_ruangan_hotel(request.POST)
 
-    return render(request)  # refresh page
+    return redirect('t4_hotel:hotel_index')
 
 
 def reservasi_hotel(request):
@@ -58,7 +70,7 @@ def transaksi_hotel(request):
 
     if role == 'admin_satgas':
         if request.method == 'GET':
-            return render(request)  # render form
+            return render(request, 'hotel_transaksi.html')  # render form
         elif request.method == 'UPDATE':
             update_transaksi_hotel(request.POST)
     else:
@@ -72,9 +84,46 @@ def transaksi_booking_hotel(request):
         return redirect('/')
 
     else:
-        return render(request)  # show form
+        return render(request, 'hotel_transaksi_booking.html')  # show form
 
 # Helper functions
+
+
+def list_hotel_rooms():
+    db = Database(schema='siruco')
+    result = db.query(f'''
+                       SELECT * FROM HOTEL_ROOM;
+                       ''')
+    db.close()
+    return result
+
+
+def get_hotel_room_codes():
+    db = Database(schema='siruco')
+    result = db.query(f'''
+                       SELECT koderoom FROM HOTEL_ROOM;
+                       ''')
+    db.close()
+    return [item for row in result for item in row]
+
+
+def get_max_hotel_room_code():
+    db = Database(schema='siruco')
+    result = db.query(f'''
+                       SELECT max(koderoom) FROM HOTEL_ROOM;
+                       ''')
+    db.close()
+    return result[0][0]
+
+
+def get_room_data(koderoom):
+    db = Database(schema='siruco')
+    result = db.query(f'''
+                       SELECT * FROM HOTEL_ROOM
+                       WHERE koderoom='{koderoom}';
+                       ''')
+    db.close()
+    return result[0]
 
 
 def get_hotel_codes():

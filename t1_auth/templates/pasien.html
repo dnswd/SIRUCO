@@ -1,0 +1,35 @@
+{% extends 'base.html' %} {% load static %}
+
+{% block head %}
+<title>
+    List Pasien
+</title>
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block content %}
+<table border="1px solid black" align="center">
+    <tr>
+        <th>No.</th>
+        <th>NIK</th>
+        <th>Nama Pasien</th>
+        <th>Action</th>
+    </tr>
+    {% for pas in pasien %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ pas.nik }}</td>
+        <td>{{ pas.nama }}</td>
+        <td>
+            <a href="{% url 't1_auth:pasien_update' nik=pas.nik %}">Update</a><br>
+            <a href="{% url 't1_auth:pasien_delete' nik=pas.nik %}">Delete</a><br>
+            <a href="{% url 't1_auth:pasien_detail' nik=pas.nik %}">Detail</a><br>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

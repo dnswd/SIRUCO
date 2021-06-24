@@ -2,12 +2,13 @@ from django.apps import AppConfig
 from siruco.db import Database
 from os import getenv
 
+
 class MainConfig(AppConfig):
     name = 'main'
-    
+
     def ready(self):
         if getenv("DATABASE_URL") == None:
-          print("Configuring Main App")
+            print("Configuring Main App")
         else:
             db = Database(schema="siruco")
             # create schema
