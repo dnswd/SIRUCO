@@ -127,16 +127,16 @@ def faskes_create(request):
 	if peran != "admin_satgas":
 		return redirect('/')
 
+	#generate new kode faskes
+	faskeslist =  get_faskes()
+	newid = 0
+	for faskes in faskeslist :
+		oldid = int(faskes['kode'][2:])
+		if (oldid > newid):
+			newid = oldid
+	newkode = 'FK' + str(newid + 1)
 	if (request.method == 'GET'):
 		response = {}
-		#generate new kode faskes
-		faskeslist =  get_faskes()
-		newid = 0
-		for faskes in faskeslist :
-			oldid = int(faskes['kode'][2:])
-			if (oldid > newid):
-				newid = oldid
-		newkode = 'FK' + str(newid + 1)
 		response['newkode'] = newkode
 		return  render(request, 'faskes_create.html', response)
 	else :
@@ -144,7 +144,7 @@ def faskes_create(request):
 		db = Database(schema='siruco')
 		db.query(f'''
 				INSERT INTO FASKES VALUES
-				('{rep.get('kode')}', 
+				('{newkode}', 
 				'{rep.get('tipe')}', 
 				'{rep.get('nama')}', 
 				'{rep.get('statusmilik')}', 
@@ -228,6 +228,103 @@ def jadwal_create(request):
 		db.close()
 		return redirect('/faskes/jadwal/')
 
+def rumahsakit(request):
+	peran = session(request, 'peran')
+	if peran != "admin_satgas":
+		return redirect('/')
+	response = {}
+	rumahsakit = get_rumahsakit()
+	response['rslist'] = rumahsakit
+	return render(request, 'rumahsakit.html', response)
+
+def rumahsakit_create(request):
+	peran = session(request, 'peran')
+	if peran != "admin_satgas":
+		return redirect('/')
+
+	if (request.method == 'GET'):
+		response = {}
+		response['kodefaskeslist'] = get_kode_faskes()
+		return render(request, 'rumahsakit_create.html', response)
+	else :
+		rep = request.POST
+		isrujukan = 1 if rep.get('isrujukan') else 0
+		db = Database(schema='siruco')
+		db.query(f'''
+				INSERT INTO RUMAH_SAKIT VALUES
+				('{rep.get('kode_faskes')}', 
+				'{isrujukan}');
+				''')
+		db.close()
+		return redirect('/faskes/rumahsakit/')
+
+def rumahsakit_update(request, pk):
+	peran = session(request, 'peran')
+	if peran != "admin_satgas":
+		return redirect('/')
+
+	if (request.method == 'GET'):
+		response = {}
+		response['rumahsakit'] = get_rumahsakit_by_kode(pk)
+		return  render(request, 'rumahsakit_update.html', response)
+	
+	else :
+		rep = request.POST
+		# print(rep.get('kode_faskes'))
+		isrujukan = 1 if rep.get('isrujukan') else 0
+		db = Database(schema='siruco')
+		db.query(f'''
+				UPDATE RUMAH_SAKIT
+				SET isrujukan='{isrujukan}'
+				WHERE kode_faskes='{pk}';
+				''')
+		db.close()
+		return redirect('/faskes/rumahsakit/')
+
+def transaksi(request): #perlu tambahin tulisan TRS00 ga ? waktu tgl uang gmn ?
+	peran = session(request, 'peran')
+	if peran != "admin_satgas":
+		return redirect('/')
+	response = {}
+	response['transaksilist'] = get_transaksi()
+	return render(request, 'transaksi.html', response)
+
+def transaksi_update(request, pk):
+	peran = session(request, 'peran')
+	if peran != "admin_satgas":
+		return redirect('/')
+
+	if (request.method == 'GET'):
+		response = {}
+		response['transaksi'] = get_transaksi_by_id(pk)
+		return  render(request, 'transaksi_update.html', response)
+	
+	else :
+		rep = request.POST
+		db = Database(schema='siruco')
+		db.query(f'''
+				UPDATE TRANSAKSI_RS
+				SET statusbayar='{rep.get('statusbayar')}'
+				WHERE idtransaksi='{pk}';
+				''')
+		db.close()
+		return redirect('/faskes/transaksi/')
+
+def transaksi_delete(request, pk):
+	peran = session(request, 'peran')
+	if peran != "admin_satgas":
+		return redirect('/')
+	id = str(pk)
+	db = Database(schema='siruco')
+	db.query(f'''
+			DELETE FROM TRANSAKSI_RS
+			WHERE idtransaksi=CAST({id} AS VARCHAR);
+			''')
+	db.close()
+	return redirect('/faskes/transaksi/')
+	
+
+
 # api views
 def reservasi_ruangan_api(request, koders):
 	peran = session(request, 'peran')
@@ -246,6 +343,82 @@ def reservasi_bed_api(request, koders, koderuangan):
 	return HttpResponse(data_list, content_type="text/json-comment-filtered")
 
 # Helper Functions
+def get_transaksi():
+	db = Database(schema='siruco')
+	query = db.query(f'''
+		SELECT * FROM TRANSAKSI_RS;
+		''')
+	db.close()
+	result = [{
+		"idtransaksi": query[r][0],
+		"kodepasien": query[r][1],
+		"tanggalpembayaran": "-" if query[r][2]==None else query[r][2],
+		"waktupembayaran": "-" if query[r][3]==None else query[r][3],
+		"tglmasuk": query[r][4],
+		"totalbiaya": parsebiaya(query[r][5]),
+		"statusbayar": query[r][6],
+		} for r in range(len(query))
+	]
+	# print(result)
+	return result
+
+def parsebiaya(biaya):
+	remain = str(biaya)[-3:]
+	biaya = biaya//1000
+	result = remain
+	while(biaya > 0):
+		remain = str(biaya)[-3:]
+		biaya = biaya//1000
+		result = remain + "." + result
+	return "Rp" + result
+
+def get_transaksi_by_id(pk):
+	db = Database(schema='siruco')
+	query = db.query(f'''
+		SELECT * FROM TRANSAKSI_RS
+		WHERE idtransaksi='{pk}';
+		''')
+	db.close()
+	result = {
+		"id": query[0][0],
+		"kode": query[0][1],
+		"tanggalpembayaran": "-" if query[0][2]==None else query[0][2],
+		"waktupembayaran": "-" if query[0][3]==None else query[0][3],
+		"tglmasuk": query[0][4],
+		"totalbiaya": parsebiaya(query[0][5]),
+		"statusbayar": query[0][6],
+		}
+	# print(result)
+	return result
+
+def get_rumahsakit():
+	db = Database(schema='siruco')
+	query = db.query(f'''
+		SELECT * FROM RUMAH_SAKIT;
+		''')
+	db.close()
+	result = [{
+		"kode_faskes": query[r][0],
+		"isrujukan": True if query[r][1]=="1" else False,
+		} for r in range(len(query))
+	]
+	# print(result)
+	return result
+
+def get_rumahsakit_by_kode(kode):
+	db = Database(schema='siruco')
+	query = db.query(f'''
+		SELECT * FROM RUMAH_SAKIT
+		WHERE kode_faskes='{kode}';
+		''')
+	db.close()
+	result = {
+		"kode_faskes": query[0][0],
+		"isrujukan": True if query[0][1]=="1" else False
+		}
+	# print(result)
+	return result
+
 def get_jadwal():
 	db = Database(schema='siruco')
 	query = db.query(f'''
