@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from siruco.db import Database
-from .forms import HotelRoomForm, EditHotelRoomForm
+from .forms import HotelRoomForm, EditHotelRoomForm, ReservationForm
+import json
 
 # Dennis Al Baihaqi Walangadi (c) 2021
 # This code is prone to SQL Injection, but security isn't the main concern because:
@@ -10,7 +12,7 @@ from .forms import HotelRoomForm, EditHotelRoomForm
 
 def index(request):
     role = request.session.get('peran')
-    if role == None or role not in ['admin_satgas', 'admin_sistem', 'pengguna_publik']:
+    if role is None or role not in ['admin_satgas', 'admin_sistem', 'pengguna_publik']:
         return redirect('t1_auth:login')
 
     hotels = list_hotel_rooms()
@@ -21,7 +23,7 @@ def index(request):
 
 def ruangan_hotel(request):
     role = request.session.get('peran')
-    if role == None or role != 'admin_sistem':
+    if role is None or role != 'admin_sistem':
         return redirect('t1_auth:login')
 
     if request.method == 'GET':
@@ -63,7 +65,7 @@ def ruangan_hotel(request):
 
 def ubah_ruangan_hotel(request, koderoom=None):
     role = request.session.get('peran')
-    if role == None or role != 'admin_sistem':
+    if role is None or role != 'admin_sistem':
         return redirect('t1_auth:login')
 
     if request.method == 'GET':
@@ -94,7 +96,7 @@ def ubah_ruangan_hotel(request, koderoom=None):
 
 def remove_ruangan_hotel(request, koderoom=None):
     role = request.session.get('peran')
-    if role == None or role != 'admin_sistem':
+    if role is None or role != 'admin_sistem':
         return redirect('t1_auth:login')
 
     if koderoom:
@@ -103,29 +105,61 @@ def remove_ruangan_hotel(request, koderoom=None):
     return redirect('t4_hotel:hotel_index')
 
 
+def index_reservasi(request):
+    role = request.session.get('peran')
+    if role is None or role not in ['admin_satgas', 'pengguna_publik']:
+        return redirect('t1_auth:login')
+
+    rsvp = read_reservasi_hotel()
+    return render(request, 'hotel_reservasi_index.html', context={'rsvp': rsvp, 'peran': request.session['peran']})
+
+
 def reservasi_hotel(request):
     role = request.session.get('peran')
-    if role == None or role not in ['admin_satgas', 'pengguna_publik']:
+    if role is None or role not in ['admin_satgas', 'pengguna_publik']:
         return redirect('t1_auth:login')
 
     if request.method == 'GET':
-        return render(request, 'hotel_reservasi.html')  # render form
+        form = ReservationForm()
+        form.fields['nik'].choices = list_to_choice_array(list_nik_pasien())
+        form.fields['kode_hotel'].choices = list_to_choice_array(
+            get_hotel_codes())
+        # render form
+        return render(request, 'hotel_reservasi.html', context={'form': form})
     elif request.method == 'POST':
-        # TODO: Create transaksi and transaksi booking
+        data = {}
         create_reservasi_hotel(request.POST)
+        pass
 
-    if role == 'admin_satgas':
-        if request.method == 'UPDATE':
-            update_reservasi_hotel(request.POST)
-        elif request.method == 'DELETE':
-            delete_reservasi_hotel(request.POST)
+    # if role == 'admin_satgas':
+    #     if request.method == 'UPDATE':
+    #         update_reservasi_hotel(request.POST)
+    #     elif request.method == 'DELETE':
+    #         delete_reservasi_hotel(request.POST)
 
-    return render(request)  # refresh the form
+    return redirect('t4_hotel:reservasi_index')  # refresh the form
+
+
+def remove_reservasi_hotel(request, nik=None, tglmasuk=None):
+    if nik and tglmasuk:
+        delete_reservasi_hotel(nik=nik, tglmasuk=tglmasuk)
+
+    return redirect('t4_hotel:reservasi_index')
+
+
+def edit_reservasi_hotel(request, nik=None, tglmasuk=None):
+    pass
+
+
+def fetch_hotel_room(request, hotel=None):
+    if hotel:
+        rooms = rooms_by_hotel(hotel)
+        return HttpResponse(json.dumps(rooms))
 
 
 def transaksi_hotel(request):
     role = request.session.get('peran')
-    if role == None or not role == 'admin_satgas':
+    if role is None or not role == 'admin_satgas':
         return redirect('/')
 
     if role == 'admin_satgas':
@@ -140,7 +174,7 @@ def transaksi_hotel(request):
 
 def transaksi_booking_hotel(request):
     role = request.session.get('peran')
-    if role == None or role not in ['admin_satgas', 'pengguna_publik']:
+    if role is None or role not in ['admin_satgas', 'pengguna_publik']:
         return redirect('/')
 
     else:
@@ -163,7 +197,7 @@ def list_to_choice_array(lst):
 def list_hotel_rooms():
     db = Database(schema='siruco')
     result = db.query(f'''
-                       SELECT *, 
+                       SELECT *,
                        CASE
                             WHEN koderoom IN (
                                 SELECT koderoom
@@ -235,11 +269,11 @@ def create_ruangan_hotel(data):
 
 def read_ruangan_hotel(data):
     db = Database(schema='siruco')
-    db.query('''
+    result = db.query('''
              SELECT * FROM HOTEL_ROOM;
              ''')
     db.close()
-    return
+    return [item for row in result for item in row]
 
 
 def update_ruangan_hotel(data):
@@ -249,21 +283,11 @@ def update_ruangan_hotel(data):
              SET JenisBed = '{data.get('jenis_bed')}',
                  Tipe = '{data.get('tipe_room')}',
                  Harga = '{data.get('harga')}'
-             WHERE 
+             WHERE
                 KodeHotel = '{data.get('kode_hotel')}' AND
                 KodeRoom = '{data.get('kode_room')}';
              ''')
     db.close()
-    print(result)
-    print(f'''
-             UPDATE HOTEL_ROOM
-             SET JenisBed = '{data.get('jenis_bed')}',
-                 Tipe = '{data.get('tipe_room')}',
-                 Harga = '{data.get('harga')}'
-             WHERE 
-                KodeHotel = '{data.get('kode_hotel')}' AND
-                KodeRoom = '{data.get('kode_room')}';
-             ''')
     return
 
 
@@ -271,7 +295,7 @@ def delete_ruangan_hotel(kode_room):
     db = Database(schema='siruco')
     db.query(f'''
              DELETE FROM HOTEL_ROOM
-             WHERE 
+             WHERE
                 KodeRoom = '{kode_room}';
              ''')
     db.close()
@@ -282,24 +306,27 @@ def create_reservasi_hotel(data):
     db = Database(schema='siruco')
     db.query(f'''
              INSERT INTO RESERVASI_HOTEL(KodePasien,TglMasuk,TglKeluar,KodeHotel,KodeRoom) VALUES (
-                 '{data.get('kode_pasien')}',
+                 '{data.get('nik')}',
                  '{data.get('tgl_masuk')}',
                  '{data.get('tgl_keluar')}',
                  '{data.get('kode_hotel')}',
-                 '{data.get('kode_room')}'
+                 '{data.get('kode_ruangan')}'
              );
              ''')
     db.close()
     return
 
 
-def read_reservasi_hotel(data):
+def read_reservasi_hotel():
     db = Database(schema='siruco')
-    db.query(f'''
-             SELECT * FROM RESERVASI_HOTEL;
+    result = db.query(f'''
+             SELECT * , CASE
+                WHEN tglmasuk > current_date THEN 1
+                ELSE 0 END
+             FROM RESERVASI_HOTEL;
              ''')
     db.close()
-    return
+    return result
 
 
 def update_reservasi_hotel(data):
@@ -318,13 +345,13 @@ def update_reservasi_hotel(data):
     return
 
 
-def delete_reservasi_hotel(data):
+def delete_reservasi_hotel(nik, tglmasuk):
     db = Database(schema='siruco')
     db.query(f'''
              DELETE FROM RESERVASI_HOTEL
              WHERE
-                 KodePasien = '{data.get('kode_pasien')}' AND
-                 TglMasuk = '{data.get('tgl_masuk')}';
+                 KodePasien = '{nik}' AND
+                 TglMasuk = '{tglmasuk}';
              ''')
     db.close()
     return
@@ -361,7 +388,7 @@ def update_transaksi_hotel(data):
     db = Database(schema='siruco')
     db.query(f'''
              UPDATE TRANSAKSI_HOTEL
-             SET 
+             SET
                  KodePasien = '{data.get('kode_pasien')}'
                  TanggalPembayaran = '{data.get('tanggal_pembayaran')}'
                  WaktuPembayaran = '{data.get('waktu_pembayaran')}'
@@ -416,3 +443,24 @@ def delete_transaksi_booking_hotel(data):
              ''')
     db.close()
     return
+
+
+def list_nik_pasien():
+    db = Database(schema='siruco')
+    result = db.query(f'''
+             SELECT nik
+             FROM PASIEN;
+             ''')
+    db.close()
+    return [item for row in result for item in row]
+
+
+def rooms_by_hotel(hotel):
+    db = Database(schema='siruco')
+    result = db.query(f'''
+             SELECT koderoom
+             FROM HOTEL_ROOM
+             WHERE kodehotel='{hotel}';
+             ''')
+    db.close()
+    return [item for row in result for item in row]
