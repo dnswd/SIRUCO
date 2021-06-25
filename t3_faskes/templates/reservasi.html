@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% load static %} {% block head %}
 <title>
-  Pembuatan Reservasi Rumah Sakit
+  Reservasi Rumah Sakit
 </title>
 {% endblock %}
 {% block style %}
@@ -12,8 +12,9 @@
 
 
 {% endblock %} {% block content %}
-<div class="container">
-	<table class="mt-5 table table-hove table-striped" align="center">
+<div class="container mt-3">
+	<h2 class="text-center">Daftar Reservasi Rumah Sakit</h2>
+	<table class="mt-3 table table-hove table-striped" align="center">
 	  <tr>
 	    <th>No.</th>
 	    <th>NIK Pasien</th>
@@ -46,5 +47,10 @@
 	  </tr>
 	  {% endfor %}
 	</table>
+	<div class="text-center">
+	    <a href="{% url 't3_faskes:reservasi_create' %}">
+			<button class="btn btn-primary" type="button">CREATE</button>
+		</a>
+	</div>
 </div>
 {% endblock %}

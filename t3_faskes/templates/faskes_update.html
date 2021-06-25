@@ -16,7 +16,7 @@
 <div class="container">
 	<div class="card mt-5">
 	  <div class="card-header text-white text-center bg-primary">
-	    <h3>Data Fasilitas Kesehatan</h3>
+	    <h3>Form Ubah Fasilitas Kesehatan</h3>
 	  </div>
 
 	  <div class="card-body">
@@ -28,7 +28,7 @@
 			          <label for="kode">Kode Faskes:</label>
 			        </td>
 			        <td>
-			          <input name="kode" type="text" value="{{ faskes.kode }}" disabled>
+			          <input name="kode" type="text"  class='form-control'  value="{{ faskes.kode }}" disabled>
 			   		</td>
 			  	</tr>
 			    <tr>
@@ -36,7 +36,7 @@
 			          <label for="tipe">Tipe:</label>
 			        </td>
 			        <td>
-			          <input name="tipe" type="text" value="{{ faskes.tipe }}" required oninput="setCustomValidity('')"
+			          <input name="tipe" type="text" class='form-control'  value="{{ faskes.tipe }}" required oninput="setCustomValidity('')"
 			          oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')">
 			   		</td>
 			  	</tr>
@@ -45,7 +45,7 @@
 			          <label for="nama">Nama Faskes:</label>
 			        </td>
 			        <td>
-			          <input name="nama" type="text" value="{{ faskes.nama }}" required oninput="setCustomValidity('')"
+			          <input name="nama" type="text"  class='form-control' value="{{ faskes.nama }}" required oninput="setCustomValidity('')"
 			          oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')">
 			   		</td>
 			  	</tr>
@@ -54,7 +54,7 @@
 			          <label for="statusmilik">Status Kepemilikan:</label>
 			        </td>
 			        <td>
-			          <input name="statusmilik" type="text" value="{{ faskes.statusmilik }}" required oninput="setCustomValidity('')"
+			          <input name="statusmilik" type="text"  class='form-control'  value="{{ faskes.statusmilik }}" required oninput="setCustomValidity('')"
 			          oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')">
 			   		</td>
 			  	</tr>
@@ -68,7 +68,7 @@
 			          <label for="jalan">Jalan:</label>
 			        </td>
 			        <td>
-			          <input name="jalan" type="text" value="{{ faskes.jalan }}" required oninput="setCustomValidity('')"
+			          <input name="jalan" type="text" class='form-control'  value="{{ faskes.jalan }}" required oninput="setCustomValidity('')"
 			          oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')">
 			   		</td>
 			  	</tr>
@@ -77,7 +77,7 @@
 			          <label for="kelurahan">Kelurahan:</label>
 			        </td>
 			        <td>
-			          <input name="kelurahan" type="text" value="{{ faskes.kelurahan }}" required oninput="setCustomValidity('')"
+			          <input name="kelurahan" type="text" class='form-control'  value="{{ faskes.kelurahan }}" required oninput="setCustomValidity('')"
 			          oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')">
 			   		</td>
 			  	</tr>
@@ -86,7 +86,7 @@
 			          <label for="kecamatan">Kecamatan:</label>
 			        </td>
 			        <td>
-			          <input name="kecamatan" type="text" value="{{ faskes.kecamatan }}" required oninput="setCustomValidity('')"
+			          <input name="kecamatan" type="text" class='form-control'  value="{{ faskes.kecamatan }}" required oninput="setCustomValidity('')"
 			          oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')">
 			   		</td>
 			  	</tr>
@@ -95,7 +95,7 @@
 			          <label for="kabkot">Kabupaten/Kota:</label>
 			        </td>
 			        <td>
-			          <input name="kabkot" type="text" value="{{ faskes.kabkot }}" required oninput="setCustomValidity('')"
+			          <input name="kabkot" type="text" class='form-control'  value="{{ faskes.kabkot }}" required oninput="setCustomValidity('')"
 			          oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')">
 			   		</td>
 			  	</tr>
@@ -104,7 +104,7 @@
 			          <label for="prov">Provinsi:</label>
 			        </td>
 			        <td>
-			          <input name="prov" type="text" value="{{ faskes.prov }}" required oninput="setCustomValidity('')"
+			          <input name="prov" type="text" class='form-control'  value="{{ faskes.prov }}" required oninput="setCustomValidity('')"
 			          oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')">
 			   		</td>
 			  	</tr>

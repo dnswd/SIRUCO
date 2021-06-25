@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% load static %} {% block head %}
 <title>
-  Fasilitas Kesehatan
+  Jadwal Fasilitas Kesehatan
 </title>
 {% endblock %}
 {% block style %}
@@ -13,29 +13,25 @@
 
 {% endblock %} {% block content %}
 <div class="container mt-3">
-	<h2 class="text-center">Daftar Fasilitas Kesehatan</h2>
+	<h2 class="text-center">Daftar Jadwal Fasilitas Kesehatan</h2>
 	<table class="mt-3 table table-hove table-striped" align="center">
 	  <tr>
-	    <th>Kode Faskes</th>
-	    <th>Tipe</th>
-	    <th>Nama Faskes</th>
-	    <th>Action</th>
+	    <th>No.</th>
+	    <th>Faskes</th>
+	    <th>Shift</th>
+	    <th>Tanggal</th>
 	  </tr>
-	  {% for item in faskeslist %}
+	  {% for item in jadwallist %}
 	  <tr>
-	    <td>{{ item.kode }}</td>
-	    <td>{{ item.tipe }}</td>
-	    <td>{{ item.nama }}</td>
-	    <td>
-	    	<a href="{% url 't3_faskes:faskes_update' pk=item.kode %}">[Update]</a><br>
-	    	<a href="{% url 't3_faskes:faskes_delete' pk=item.kode %}">[Delete]</a><br>
-	    	<a href="{% url 't3_faskes:faskes_detail' pk=item.kode %}">[Detail]</a>
-	    </td>
+	    <td>{{ forloop.counter }}</td>
+	    <td>{{ item.kode_faskes }}</td>
+	    <td>{{ item.shift }}</td>
+	    <td>{{ item.tanggal }}</td>
 	  </tr>
 	  {% endfor %}
 	</table>
 	<div class="text-center">
-	    <a href="{% url 't3_faskes:faskes_create' %}">
+	    <a href="{% url 't3_faskes:jadwal_create' %}">
 			<button class="btn btn-primary" type="button">CREATE</button>
 		</a>
 	</div>

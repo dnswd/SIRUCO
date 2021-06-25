@@ -20,114 +20,110 @@
 </div>
 {% endfor %}
 
-<table border="1px solid black" align="center">
-    <tr>
-        <th>Form Membuat Reservasi Rumah Sakit</th>
-    </tr>
-    <tr>
-        <td>
-            <form action="{% url 't3_faskes:reservasi_create' %}" method="POST">
-                {% csrf_token %}
-                <table>
-                    <tr>
-			            <td>
-			              <label for="nik">
-			                NIK Pasien:
-			              </label>
-			            </td>
-			            <td>
-			              <select name="nik" required 
-			              oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
-                          oninput="setCustomValidity('')">
-			              	<option value="" disabled selected>Pilih NIK Pasien</option>
-			                {% for nomor in pasienlist %}
-			                  <option value="{{ nomor }}">{{ nomor }}</option>
-			                {% endfor %}
-			              </select>
-		           		</td>
-		          	</tr>
-                    <tr>
-                        <td>
-                            <label for="tgl_masuk">
-                                Tanggal Masuk:
-                            </label>
-                        </td>
-                        <td>
-                            <input name="tgl_masuk" type="date" required maxlength="10"
-                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
-                                oninput="setCustomValidity('')">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="tgl_keluar">
-                                Tanggal Keluar:
-                            </label>
-                        </td>
-                        <td>
-                            <input name="tgl_keluar" type="date" required maxlength="10"
+<div class="container">
+	<div class="card mt-5">
+	  <div class="card-header text-white text-center bg-primary">
+	    <h3>Form Membuat Reservasi Rumah Sakit</h3>
+	  </div>
+
+	  <div class="card-body">
+        <form action="{% url 't3_faskes:reservasi_create' %}" method="POST">
+            {% csrf_token %}
+            <table class="table">
+                <tr>
+		            <td>
+		              <label for="nik">
+		                NIK Pasien:
+		              </label>
+		            </td>
+		            <td>
+		              <select name="nik" required   class='form-control' 
+		              oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                      oninput="setCustomValidity('')">
+		              	<option value="" disabled selected>Pilih NIK Pasien</option>
+		                {% for nomor in pasienlist %}
+		                  <option value="{{ nomor }}">{{ nomor }}</option>
+		                {% endfor %}
+		              </select>
+	           		</td>
+	          	</tr>
+                <tr>
+                    <td>
+                        <label for="tgl_masuk">
+                            Tanggal Masuk:
+                        </label>
+                    </td>
+                    <td>
+                        <input name="tgl_masuk" type="date" class='form-control'  required maxlength="10"
                             oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
                             oninput="setCustomValidity('')">
-                        </td>
-                    </tr>
-                    <tr>
-			            <td>
-			              <label for="kode_rs">
-			                Kode Rumah Sakit:
-			              </label>
-			            </td>
-			            <td>
-			              <select name="kode_rs" id="select_rs" required
-			              oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
-                          oninput="setCustomValidity('')">
-			              	<option disabled value="" selected >Pilih kode Rumah Sakit</option>
-			                {% for kode in rslist %}
-			                  <option value="{{ kode }}">{{ kode }}</option>
-			                {% endfor %}
-			              </select>
-		           		</td>
-		          	</tr>
-		          	<tr>
-			            <td>
-			              <label for="kode_ruangan">
-			                Kode Ruangan:
-			              </label>
-			            </td>
-			            <td>
-			              <select name="kode_ruangan" id="select_ruangan" required
-			              oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
-                          oninput="setCustomValidity('')">
-			              	<option disabled value="" selected >Pilih kode Ruangan</option>
-			              </select>
-		           		</td>
-		          	</tr>
-		          	<tr>
-			            <td>
-			              <label for="kode_bed">
-			                Kode Bed:
-			              </label>
-			            </td>
-			            <td>
-			              <select name="kode_bed" id="select_bed" required
-			              oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
-                          oninput="setCustomValidity('')">
-			              	<option disabled value="" selected>Pilih kode Bed</option>
-			              </select>
-		           		</td>
-		          	</tr>
-                    <tr>
-                        <td><br></td>
-                    </tr>
-                </table>
-                <div style="text-align: center;">
-                    <button type="submit">
-                        SIMPAN
-                    </button>
-                </div>
-            </form>
-        </td>
-    </tr>
-</table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="tgl_keluar">
+                            Tanggal Keluar:
+                        </label>
+                    </td>
+                    <td>
+                        <input name="tgl_keluar" type="date" class='form-control'  required maxlength="10"
+                        oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                        oninput="setCustomValidity('')">
+                    </td>
+                </tr>
+                <tr>
+		            <td>
+		              <label for="kode_rs">
+		                Kode Rumah Sakit:
+		              </label>
+		            </td>
+		            <td>
+		              <select name="kode_rs" id="select_rs" class='form-control'  required
+		              oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                      oninput="setCustomValidity('')">
+		              	<option disabled value="" selected >Pilih kode Rumah Sakit</option>
+		                {% for kode in rslist %}
+		                  <option value="{{ kode }}">{{ kode }}</option>
+		                {% endfor %}
+		              </select>
+	           		</td>
+	          	</tr>
+	          	<tr>
+		            <td>
+		              <label for="kode_ruangan">
+		                Kode Ruangan:
+		              </label>
+		            </td>
+		            <td>
+		              <select name="kode_ruangan" id="select_ruangan" class='form-control'  required
+		              oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                      oninput="setCustomValidity('')">
+		              	<option disabled value="" selected >Pilih kode Ruangan</option>
+		              </select>
+	           		</td>
+	          	</tr>
+	          	<tr>
+		            <td>
+		              <label for="kode_bed">
+		                Kode Bed:
+		              </label>
+		            </td>
+		            <td>
+		              <select name="kode_bed" id="select_bed" required class='form-control' 
+		              oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                      oninput="setCustomValidity('')">
+		              	<option disabled value="" selected>Pilih kode Bed</option>
+		              </select>
+	           		</td>
+	          	</tr>
+            </table>
+			<div class="text-center">
+				<button class="btn btn-primary" type="submit">SIMPAN</button>
+			</div>
+        </form>
+	  </div>
+	</div>
+</div>
 
 {% endblock %}
 

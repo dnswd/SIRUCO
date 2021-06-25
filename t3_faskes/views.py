@@ -198,6 +198,36 @@ def faskes_delete(request, pk):
 	db.close()
 	return redirect('/faskes/')
 
+def jadwal(request):
+	peran = session(request, 'peran')
+	if peran != "admin_satgas":
+		return redirect('/')
+	
+	response = {}
+	response['jadwallist'] = get_jadwal()
+	return render(request, 'jadwal.html', response)
+
+def jadwal_create(request):
+	peran = session(request, 'peran')
+	if peran != "admin_satgas":
+		return redirect('/')
+
+	if (request.method == 'GET'):
+		response = {}
+		response['kodefaskeslist'] = get_kode_faskes()
+		return render(request, 'jadwal_create.html', response)
+	else :
+		rep = request.POST
+		db = Database(schema='siruco')
+		db.query(f'''
+				INSERT INTO JADWAL VALUES
+				('{rep.get('kode_faskes')}', 
+				'{rep.get('shift')}', 
+				'{rep.get('tanggal')}');
+				''')
+		db.close()
+		return redirect('/faskes/jadwal/')
+
 # api views
 def reservasi_ruangan_api(request, koders):
 	peran = session(request, 'peran')
@@ -216,6 +246,21 @@ def reservasi_bed_api(request, koders, koderuangan):
 	return HttpResponse(data_list, content_type="text/json-comment-filtered")
 
 # Helper Functions
+def get_jadwal():
+	db = Database(schema='siruco')
+	query = db.query(f'''
+		SELECT * FROM JADWAL;
+		''')
+	db.close()
+	result = [{
+		"kode_faskes": query[r][0],
+		"shift": query[r][1],
+		"tanggal": query[r][2],
+		} for r in range(len(query))
+	]
+	# print(result)
+	return result
+
 def get_faskes():
 	db = Database(schema='siruco')
 	query = db.query(f'''
@@ -234,6 +279,18 @@ def get_faskes():
 		"prov": query[r][8],
 		} for r in range(len(query))
 	]
+	# print(result)
+	return result
+
+def get_kode_faskes():
+	db = Database(schema='siruco')
+	query = db.query(f'''
+		SELECT * FROM FASKES;
+		''')
+	db.close()
+	result = []
+	for item in query:
+	    result.append(item[0])
 	# print(result)
 	return result
 
