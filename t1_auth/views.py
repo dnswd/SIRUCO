@@ -69,7 +69,7 @@ def register(request):
                     status = record_as_admin_dokter(request.POST)
                 elif request.POST.get('peran') == 'admin_satgas':
                     status = record_as_admin_satgas(request.POST)
-                else:
+                elif request.POST.get('peran') != 'admin_sistem':
                     # TODO: proper redirect to form
                     return redirect('/account/register')
 
