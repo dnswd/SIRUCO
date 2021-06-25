@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from siruco.db import Database
-from .forms import HotelRoomForm
+from .forms import HotelRoomForm, EditHotelRoomForm
 
 # Dennis Al Baihaqi Walangadi (c) 2021
 # This code is prone to SQL Injection, but security isn't the main concern because:
@@ -19,15 +19,12 @@ def index(request):
     return render(request, 'hotel_index.html', context=context)
 
 
-def ruangan_hotel(request, koderoom=None):
+def ruangan_hotel(request):
     role = request.session.get('peran')
     if role == None or role != 'admin_sistem':
         return redirect('t1_auth:login')
 
     if request.method == 'GET':
-        if koderoom:
-            context = {'room': get_room_data(koderoom)}
-            return render(request, 'hotel_ruangan_update.html', context=context)
 
         hotel_room_form = HotelRoomForm(
             initial={'kode_ruangan': new_hotel_room()})
@@ -38,29 +35,70 @@ def ruangan_hotel(request, koderoom=None):
         # render index
         return render(request, 'hotel_ruangan.html', context=context)
 
-    elif role == 'admin_sistem':
-        if request.method == 'POST':
-            data = {}
-            data['kode_hotel'] = kode_hotel = request.POST.get('kode_hotel')
-            # I don't have much time
-            data['kode_room'] = kode_ruangan = new_hotel_room()
-            data['jenis_bed'] = jenis_bed = request.POST.get('jenis_bed')
-            data['tipe_room'] = tipe = request.POST.get('tipe')
-            data['harga'] = harga_per_hari = request.POST.get(
-                'harga_per_hari')
+    elif request.method == 'POST':
+        data = {}
+        data['kode_hotel'] = kode_hotel = request.POST.get('kode_hotel')
+        # I don't have much time
+        data['kode_room'] = kode_ruangan = new_hotel_room()
+        data['jenis_bed'] = jenis_bed = request.POST.get('jenis_bed')
+        data['tipe_room'] = tipe = request.POST.get('tipe')
+        data['harga'] = harga_per_hari = request.POST.get(
+            'harga_per_hari')
 
-            if kode_hotel and kode_ruangan and jenis_bed and tipe and harga_per_hari:
-                create_ruangan_hotel(data)
-            else:
-                context = {'form': HotelRoomForm(request.POST)}
-                context['form'].fields['kode_hotel'].choices = list_to_choice_array(
-                    get_hotel_codes())
-                return render(request, 'hotel_ruangan.html', context=context)
+        if kode_hotel and kode_ruangan and jenis_bed and tipe and harga_per_hari:
+            create_ruangan_hotel(data)
+        else:
+            context = {'form': HotelRoomForm(request.POST)}
+            context['form'].fields['kode_hotel'].choices = list_to_choice_array(
+                get_hotel_codes())
+            return render(request, 'hotel_ruangan.html', context=context)
 
-        elif request.method == 'UPDATE':
-            update_ruangan_hotel(request.POST)
-        elif request.method == 'DELETE':
-            delete_ruangan_hotel(request.POST)
+    elif request.method == 'UPDATE':
+        update_ruangan_hotel(request.POST)
+    elif request.method == 'DELETE':
+        delete_ruangan_hotel(request.POST)
+
+    return redirect('t4_hotel:hotel_index')
+
+
+def ubah_ruangan_hotel(request, koderoom=None):
+    role = request.session.get('peran')
+    if role == None or role != 'admin_sistem':
+        return redirect('t1_auth:login')
+
+    if request.method == 'GET':
+        room_data = get_room_data(koderoom)
+        form = EditHotelRoomForm(initial={
+            'kode_hotel': room_data[0],
+            'kode_ruangan': room_data[1],
+            'jenis_bed': room_data[2],
+            'tipe': room_data[3],
+            'harga_per_hari': room_data[4],
+        })
+        context = {'form': form}
+        return render(request, 'hotel_ruangan_update.html', context=context)
+
+    elif request.method == 'POST':
+        data = {}
+        room_data = get_room_data(koderoom)
+        data['kode_hotel'] = kode_hotel = room_data[0]
+        data['kode_room'] = kode_ruangan = room_data[1]
+        data['jenis_bed'] = jenis_bed = request.POST.get('jenis_bed')
+        data['tipe_room'] = tipe = request.POST.get('tipe')
+        data['harga'] = harga_per_hari = request.POST.get('harga_per_hari')
+        print(data)
+        update_ruangan_hotel(data)
+
+        return redirect('t4_hotel:hotel_index')
+
+
+def remove_ruangan_hotel(request, koderoom=None):
+    role = request.session.get('peran')
+    if role == None or role != 'admin_sistem':
+        return redirect('t1_auth:login')
+
+    if koderoom:
+        delete_ruangan_hotel(koderoom)
 
     return redirect('t4_hotel:hotel_index')
 
@@ -125,7 +163,19 @@ def list_to_choice_array(lst):
 def list_hotel_rooms():
     db = Database(schema='siruco')
     result = db.query(f'''
-                       SELECT * FROM HOTEL_ROOM;
+                       SELECT *, 
+                       CASE
+                            WHEN koderoom IN (
+                                SELECT koderoom
+                                FROM RESERVASI_HOTEL
+                                WHERE tglkeluar < current_date
+                            )
+                            OR koderoom NOT IN (
+                                SELECT koderoom
+                                FROM RESERVASI_HOTEL
+                            ) THEN 1 ELSE 0
+                            END
+                       FROM HOTEL_ROOM;
                        ''')
     db.close()
     return result
@@ -194,7 +244,7 @@ def read_ruangan_hotel(data):
 
 def update_ruangan_hotel(data):
     db = Database(schema='siruco')
-    db.query(f'''
+    result = db.query(f'''
              UPDATE HOTEL_ROOM
              SET JenisBed = '{data.get('jenis_bed')}',
                  Tipe = '{data.get('tipe_room')}',
@@ -204,16 +254,25 @@ def update_ruangan_hotel(data):
                 KodeRoom = '{data.get('kode_room')}';
              ''')
     db.close()
+    print(result)
+    print(f'''
+             UPDATE HOTEL_ROOM
+             SET JenisBed = '{data.get('jenis_bed')}',
+                 Tipe = '{data.get('tipe_room')}',
+                 Harga = '{data.get('harga')}'
+             WHERE 
+                KodeHotel = '{data.get('kode_hotel')}' AND
+                KodeRoom = '{data.get('kode_room')}';
+             ''')
     return
 
 
-def delete_ruangan_hotel(data):
+def delete_ruangan_hotel(kode_room):
     db = Database(schema='siruco')
     db.query(f'''
              DELETE FROM HOTEL_ROOM
              WHERE 
-                KodeHotel = '{data.get('kode_hotel')}' AND
-                KodeRoom = '{data.get('kode_room')}';
+                KodeRoom = '{kode_room}';
              ''')
     db.close()
     return

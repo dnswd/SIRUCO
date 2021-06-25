@@ -33,32 +33,42 @@
 
 {% if hotels %}
 <h3>DAFTAR HOTEL</h3>
-<table style="width:100%">
+<table style="mx-auto max-w-4xl w-full whitespace-nowrap rounded-lg bg-white divide-y divide-gray-300 overflow-hidden">
+<thead class="bg-gray-400">
   <tr>
-    <th>No.</th>
-    <th>Kode Hotel</th>
-    <th>Kode Ruangan</th>
-    <th>Jenis Bed</th>
-    <th>Tipe</th>
-    <th>Harga</th>
-    {% if peran == "admin_sistem" %}<th>Action</th>{% endif %}
+    <th class="font-semibold text-sm uppercase px-6 py-4 text-center">No.</th>
+    <th class="font-semibold text-sm uppercase px-6 py-4">Kode Hotel</th>
+    <th class="font-semibold text-sm uppercase px-6 py-4">Kode Ruangan</th>
+    <th class="font-semibold text-sm uppercase px-6 py-4">Jenis Bed</th>
+    <th class="font-semibold text-sm uppercase px-6 py-4">Tipe</th>
+    <th class="font-semibold text-sm uppercase px-6 py-4 text-right">Harga</th>
+    {% if peran == "admin_sistem" %}
+      <th class="font-semibold text-sm uppercase px-6 py-4 text-center">Action</th>
+    {% endif %}
   </tr>
+</thead>
+  <tbody class="divide-y divide-gray-200">
   {% for hotel in hotels %}
   <tr>
-    <td>{{ forloop.counter }}</td>
-    <td>{{ hotel.0 }}</td>
-    <td>{{ hotel.1 }}</td>
-    <td>{{ hotel.2 }}</td>
-    <td>{{ hotel.3 }}</td>
-    <td>{{ hotel.4 }}</td>
+    <td class="px-6 py-4 text-center">{{ forloop.counter }}</td>
+    <td class="px-6 py-4">{{ hotel.0 }}</td>
+    <td class="px-6 py-4">{{ hotel.1 }}</td>
+    <td class="px-6 py-4">{{ hotel.2 }}</td>
+    <td class="px-6 py-4">{{ hotel.3 }}</td>
+    <td class="px-6 py-4 text-right">Rp.{{ hotel.4 }}</td>
     {% if peran == "admin_sistem" %}
         <th>
-        <button><a href={% url 't4_hotel:ruangan_hotel_update' koderoom=hotel.1 %}>Update</a></button>
-        <button>Delete</button>
+        <a href={% url 't4_hotel:ruangan_hotel_update' koderoom=hotel.1 %}><button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Update</button></a>
+        {% if hotel.5 == 1 %}
+        <a href={% url 't4_hotel:ruangan_hotel_delete' koderoom=hotel.1 %}><button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">Delete</button></a>
+        {% else %}
+        <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded opacity-50 cursor-not-allowed">Reserved</button>
+        {% endif %}
         </th>
     {% endif %}
   </tr>
   {% endfor %}
+  </tbody>
 </table>
 {% endif %}
 
