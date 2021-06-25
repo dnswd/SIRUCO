@@ -34,3 +34,14 @@ class ReservationForm(Form):
         initial=(datetime.today() + timedelta(days=12)), required=True)
     kode_hotel = ChoiceField()
     kode_ruangan = ChoiceField()
+
+
+class EditReservationForm(Form):
+    """
+    Create HOTEL_ROOM Form
+    """
+    nik = CharField(disabled=True)
+    tgl_masuk = DateField(initial=datetime.today, disabled=True)
+    tgl_keluar = DateField(required=True)
+    kode_hotel = CharField(disabled=True)
+    kode_ruangan = CharField(disabled=True)

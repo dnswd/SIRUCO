@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from siruco.db import Database
-from .forms import HotelRoomForm, EditHotelRoomForm, ReservationForm
+from .forms import HotelRoomForm, EditHotelRoomForm, ReservationForm, EditReservationForm
 import json
 
 # Dennis Al Baihaqi Walangadi (c) 2021
@@ -141,6 +141,10 @@ def reservasi_hotel(request):
 
 
 def remove_reservasi_hotel(request, nik=None, tglmasuk=None):
+    role = request.session.get('peran')
+    if role is None or role not in ['admin_satgas', 'pengguna_publik']:
+        return redirect('t1_auth:login')
+
     if nik and tglmasuk:
         delete_reservasi_hotel(nik=nik, tglmasuk=tglmasuk)
 
@@ -148,7 +152,25 @@ def remove_reservasi_hotel(request, nik=None, tglmasuk=None):
 
 
 def edit_reservasi_hotel(request, nik=None, tglmasuk=None):
-    pass
+    role = request.session.get('peran')
+    if role is None or role not in ['admin_satgas', 'pengguna_publik']:
+        return redirect('t1_auth:login')
+
+    if request.method == 'POST':
+        update_reservasi_hotel(nik, tglmasuk, request.POST.get('tgl_keluar'))
+        return redirect('t4_hotel:reservasi_index')
+
+    if nik and tglmasuk:
+        data = get_reservasi_hotel(nik, tglmasuk)
+        form = EditReservationForm(initial={
+            "nik": nik,
+            "tgl_masuk": tglmasuk,
+            "tgl_keluar": data[2],
+            "kode_hotel": data[3],
+            "kode_ruangan": data[4]
+        })
+
+    return render(request, 'hotel_reservasi.html', context={'form': form})
 
 
 def fetch_hotel_room(request, hotel=None):
@@ -329,17 +351,28 @@ def read_reservasi_hotel():
     return result
 
 
-def update_reservasi_hotel(data):
+def get_reservasi_hotel(nik, tglmasuk):
+    db = Database(schema='siruco')
+    result = db.query(f'''
+             SELECT *
+             FROM RESERVASI_HOTEL
+             WHERE 
+                KodePasien = '{nik}' AND
+                TglMasuk = '{tglmasuk}';
+             ''')
+    db.close()
+    return result[0]
+
+
+def update_reservasi_hotel(kode_pasien, tgl_masuk, tgl_keluar):
     db = Database(schema='siruco')
     db.query(f'''
              UPDATE RESERVASI_HOTEL
              SET
-                 TglKeluar = '{data.get('tgl_keluar')}',
-                 KodeHotel = '{data.get('kode_hotel')}',
-                 KodeRoom = '{data.get('kode_room')}'
+                 TglKeluar = '{tgl_keluar}'
              WHERE
-                 KodePasien = '{data.get('kode_pasien')}' AND
-                 TglMasuk = '{data.get('tgl_masuk')}';
+                 KodePasien = '{kode_pasien}' AND
+                 TglMasuk = '{tgl_masuk}';
              ''')
     db.close()
     return
