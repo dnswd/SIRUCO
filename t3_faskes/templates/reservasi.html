@@ -47,10 +47,12 @@
 	  </tr>
 	  {% endfor %}
 	</table>
+	{% if isAdminSatgas %}
 	<div class="text-center">
 	    <a href="{% url 't3_faskes:reservasi_create' %}">
 			<button class="btn btn-primary" type="button">CREATE</button>
 		</a>
 	</div>
+	{% endif %}
 </div>
 {% endblock %}
