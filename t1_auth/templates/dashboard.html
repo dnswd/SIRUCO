@@ -10,10 +10,9 @@
 
 {% endblock %} {% block content %}
 
-<h1 class="p-2 text-center">Dashboard</h1>
-
-<h2>Profil</h2>
-<h3>Username : {{ username }}</h3>
+<div class="container dashboard mt-5">
+<h1 class="text-center">Dashboard</h1>
+<h3 class="pt-4">Welcome, {{ username }}!</h3>
 
 <ul>
 	{% if peran == "admin_sistem" %}
@@ -139,8 +138,8 @@
 
 </ul>
 
-<a href="{% url 'main:home' %}" class="p-3">
-	<button class="btn btn-primary" type="button">Back</button>
+<a href="{% url 't1_auth:logout' %}" class="p-3">
+	<button class="btn btn-danger" type="button">Logout</button>
 </a>
 
 {% endblock content %}

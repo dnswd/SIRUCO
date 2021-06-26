@@ -10,43 +10,45 @@
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 {% endblock %} {% block content %}
-<div class="navbar">
-  <ul class="nav nav-pills">
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'main:home' %}">Home</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 't2_appointment:read_jadwal' %}">Appointment</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 't3_faskes:index' %}">Faskes</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 't4_hotel:hotel_index' %}">Hotel</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 't5_makanan:index' %}">Makanan</a>
-    </li>
-  </ul>
-  <ul class="nav nav-pills ml-auto">
-    {% if not isLogin %}
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 't1_auth:login' %}">Login</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 't1_auth:register' %}">Register</a>
-    </li>
-    {% else %}
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 't1_auth:dashboard' %}">Dashboard</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 't1_auth:logout' %}">Logout</a>
-    </li>
-    {% endif %}
-  </ul>
+
+<div class="container">
+  <nav class="navbar">
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'main:home' %}">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 't2_appointment:read_jadwal' %}">Appointment</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 't3_faskes:index' %}">Faskes</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 't4_hotel:hotel_index' %}">Hotel</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 't5_makanan:index' %}">Makanan</a>
+      </li>
+    </ul>
+    <ul class="nav nav-pills ml-auto">
+      {% if not isLogin %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 't1_auth:login' %}">Login</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 't1_auth:register' %}">Register</a>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 't1_auth:dashboard' %}">Dashboard</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 't1_auth:logout' %}">Logout</a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <h1 class="p-5 text-center">SIRUCO - TK6D</h1>
 </div>
-
-<h1 class="p-5 text-center">SIRUCO - TK6D</h1>
-
 {% endblock content %}
