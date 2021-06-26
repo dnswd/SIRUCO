@@ -1,0 +1,51 @@
+{% extends 'home-t2.html' %} {% load static %}
+{% block head %}
+<title>
+    Buat Ruangan RS
+</title>
+{% endblock %}
+{% block meta %}
+<link rel="stylesheet" href="{% static 'css/t2.css' %}">
+{% endblock %}
+{% block subcontent %}
+<div class="isi-form">
+    <h2>Form Buat Ruangan RS</h2>
+    <div>
+        <form th:action="" method="POST">
+            {% csrf_token %}
+            <div>
+                <label for="kodeRS">Kode Rumah Sakit:</label>
+                <select name="kodeRS" id="opsi-dropdown" class="opsi-rs" required>
+                    <option selected></option>
+                    {% for n in list_kodeRS %}
+                    <option value="{{ n.kodeRS }}">{{ n.kodeRS }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="kodeRuangan">Kode Ruangan:</label>
+                <input type="text" name="kodeRuangan" id="no-ruang" placeholder={{kodeRuangan}} readonly=true>
+            </div>
+            <div>
+                <label for="tipe">Tipe:</label>
+                <input type="text" id="cek-isi-form" name="tipe">
+            </div>
+            <div>
+                <label for="harga">Harga Ruangan:</label>
+                <input type="text" id="cek-isi-form2" name="harga">
+            </div>
+            <div>
+                <label id="input-kosong"></label>
+            </div>
+
+            <button type="submit" id="button-submit-cek" class="btn btn-primary">Simpan
+            </button>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
+<script src="{% static 'js/t2-appointment.js' %}"></script>
+
+{% endblock %}

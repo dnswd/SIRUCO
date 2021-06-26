@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block head %}
-<title>Transaksi Booking Hotel | SIRUCO</title>
+<title>Hotel | SIRUCO</title>
 <meta name="description" content="Sistem Informasi Rujukan COVID-19">
 <meta property="og:title" content="SIRUCO">
 <meta property="og:type" content="website">
@@ -31,26 +31,32 @@
     <li><a href={% url "t4_hotel:transaksi_booking_hotel" %}>Transaksi Booking Hotel</a></li>
 </ul>
 
-{% if bookings %}
-<h3>DAFTAR BOOKING</h3>
+{% if transactions %}
+<h3>DAFTAR HOTEL</h3>
 <table style="mx-auto max-w-4xl w-full whitespace-nowrap rounded-lg bg-white divide-y divide-gray-300 overflow-hidden">
 <thead class="bg-gray-400">
   <tr>
-    <th class="font-semibold text-sm uppercase px-6 py-4">No.</th>
     <th class="font-semibold text-sm uppercase px-6 py-4">Id Transaksi</th>
-    <th class="font-semibold text-sm uppercase px-6 py-4 text-right">Total Bayar</th>
-    <th class="font-semibold text-sm uppercase px-6 py-4">Kode Pasien</th>
-    <th class="font-semibold text-sm uppercase px-6 py-4">Tanggal Masuk</th>
+    <th class="font-semibold text-sm uppercase px-6 py-4">NIK Pasien</th>
+    <th class="font-semibold text-sm uppercase px-6 py-4">Tanggal Pembayaran</th>
+    <th class="font-semibold text-sm uppercase px-6 py-4">Waktu Pembayaran</th>
+    <th class="font-semibold text-sm uppercase px-6 py-4 text-right">Total Biaya</th>
+    <th class="font-semibold text-sm uppercase px-6 py-4 text-center">Status</th>
+    <th class="font-semibold text-sm uppercase px-6 py-4 text-center">Action</th>
   </tr>
 </thead>
   <tbody class="divide-y divide-gray-200">
-  {% for booking in bookings %}
+  {% for transaction in transactions %}
   <tr>
-  <td class="px-6 py-4 text-center">{{ forloop.counter }}</td>
-  <td class="px-6 py-4">{{ booking.0 }}</td>
-  <td class="px-6 py-4 text-right">Rp.{{ booking.1 }}</td>
-  <td class="px-6 py-4">{{ booking.2 }}</td>
-  <td class="px-6 py-4">{{ booking.3|date:"d-m-Y" }}</td>
+    <td class="px-6 py-4">{{ transaction.0 }}</td>
+    <td class="px-6 py-4">{{ transaction.1 }}</td>
+    <td class="px-6 py-4">{{ transaction.2 }}</td>
+    <td class="px-6 py-4">{{ transaction.3 }}</td>
+    <td class="px-6 py-4 text-right">Rp.{{ transaction.4 }}</td>
+    <td class="px-6 py-4 text-center">{{ transaction.5 }}</td>
+    <th>
+    <a href={% url 't4_hotel:transaksi_hotel_edit' idtransaksi=transaction.0 %}><button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Update</button></a>
+    </th>
   </tr>
   {% endfor %}
   </tbody>
@@ -67,3 +73,4 @@
     integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
 </script>
 {% endblock script_foot %}
+

@@ -1,0 +1,39 @@
+{% extends 'home-t2.html' %} {% load static %}
+{% block head %}
+<title>
+    List Ruangan RS
+</title>
+{% endblock %}
+{% block meta %}
+<link rel="stylesheet" href="{% static 'css/t2.css' %}">
+{% endblock %}
+{% block subcontent %}
+
+<div class="isi">
+    <table class='t2-table table-responsive'>
+        <tr>
+            <th>No</th>
+            <th>Kode RS</th>
+            <th>Kode Ruangan</th>
+            <th>Tipe</th>
+            <th>Jumlah Bed</th>
+            <th>Harga Ruangan</th>
+            <th>Action</th>
+        </tr>
+        {% for j in list_ruang %}
+        <tr class="t6">
+            <td class="tdn">{{j.no}}</td>
+            <td>{{j.kodeRS}}</td>
+            <td>{{j.kodeRuangan}}</td>
+            <td>{{j.tipe}}</td>
+            <td>{{j.jmlBed}}</td>
+            <td>{{j.harga}}</td>
+            <td class="tds"><a
+                    href="{% url 't2_appointment:update_ruangan_rs' kodeRS=j.kodeRS kodeRuangan=j.kodeRuangan %}">Update</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
