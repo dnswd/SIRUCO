@@ -222,7 +222,8 @@ def transaksi_booking_hotel(request):
         return redirect('/')
 
     else:
-        return render(request, 'hotel_transaksi_booking.html')  # show form
+        bookings = read_transaksi_booking_hotel()
+        return render(request, 'hotel_transaksi_booking.html', context={'bookings': bookings})  # show form
 
 # Helper functions
 
@@ -487,13 +488,13 @@ def create_transaksi_booking_hotel(data):
     return
 
 
-def read_transaksi_booking_hotel(data):
+def read_transaksi_booking_hotel():
     db = Database(schema='siruco')
-    db.query(f'''
+    result = db.query(f'''
              SELECT * FROM TRANSAKSI_BOOKING;
              ''')
     db.close()
-    return
+    return result
 
 
 def delete_transaksi_booking_hotel(data):

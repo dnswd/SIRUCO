@@ -22,6 +22,7 @@ urlpatterns = [
     path('transaction/', views.transaksi_hotel, name='transaksi_hotel'),
     path('transaction/<str:idtransaksi>', views.transaksi_hotel_edit,
          name='transaksi_hotel_edit'),
+
     path('transaction/booking/', views.transaksi_booking_hotel,
          name='transaksi_booking_hotel'),
 ]
