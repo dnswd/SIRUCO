@@ -21,7 +21,7 @@ def login(request):
                 session(request, 'su', 1)
             return redirect('/account/dashboard')
 
-        return render(request, 'login.html')
+        return render(request, 'login.html', {"error": True})
 
     elif request.method == 'GET':
         return render(request, 'login.html')
@@ -54,8 +54,12 @@ def register(request):
         # TODO: validation, record original form path, redirect to original form path
         username = request.POST.get('email')
         password = request.POST.get('password')
-        if nama := get_user(username, password) == []:
+        user = is_exist(username)
+
+        if len(user) == 0:
             status = record_new_user(request.POST)
+            if not status:
+                return render(request, "register.html", {"error": True})
 
             if request.POST.get('peran') == 'pengguna_publik':
                 status = record_as_pengguna_publik(request.POST)
@@ -63,11 +67,9 @@ def register(request):
                 status = record_as_admin(request.POST)
                 if request.POST.get('peran') == 'admin_dokter':
                     status = record_as_admin_dokter(request.POST)
-                elif request.POST.get('peran') == 'admin_sistem':
-                    status = record_as_admin_sistem(request.POST)
                 elif request.POST.get('peran') == 'admin_satgas':
                     status = record_as_admin_satgas(request.POST)
-                else:
+                elif request.POST.get('peran') != 'admin_sistem':
                     # TODO: proper redirect to form
                     return redirect('/account/register')
 
@@ -79,7 +81,7 @@ def register(request):
         else:
             print("register failed")
             # TODO: proper redirect to form
-            return redirect('/account/register')
+            return render(request, "register.html", {"exist": True})
 
     elif request.method == 'GET':
         # halaman milih formulir, redirect ke form masing-masing
@@ -277,6 +279,16 @@ def is_admin(username, password):
     return len(admin) > 0
 
 
+def is_exist(username):
+    db = Database(schema='siruco')
+    user = db.query(f'''
+                      SELECT username, peran FROM AKUN_PENGGUNA
+                      WHERE username='{username}'
+                      ''')
+    db.close()
+    return user
+
+
 def get_user(username, password):
     db = Database(schema='siruco')
     user = db.query(f'''
@@ -299,7 +311,7 @@ def record_new_user(data):
                       );
                       ''')
     db.close()
-    return result[0] > 0
+    return len(result) > 0
 
 
 def record_as_admin(data):
@@ -310,7 +322,7 @@ def record_as_admin(data):
                       );
                       ''')
     db.close()
-    return result[0] > 0
+    return len(result) > 0
 
 
 def record_as_pengguna_publik(data):
@@ -339,17 +351,6 @@ def record_as_admin_dokter(data):
                           '{data.get('no_hp')}',
                           '{data.get('gelar_depan')}',
                           '{data.get('gelar_belakang')}'
-                      );
-                      ''')
-    db.close()
-    return len(result) > 0
-
-
-def record_as_admin_sistem(data):
-    db = Database(schema='siruco')
-    result = db.query(f'''
-                      INSERT INTO ADMIN VALUES (
-                          '{data.get('email')}'
                       );
                       ''')
     db.close()

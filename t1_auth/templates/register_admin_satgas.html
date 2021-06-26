@@ -5,7 +5,8 @@
 {% endblock %}
 {% block style %}
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 {% endblock %} {% block content %}
@@ -27,7 +28,7 @@
               </label>
             </td>
             <td>
-              <input name="email" type="text" />
+              <input name="email" type="text" required maxlength="50" />
             </td>
           </tr>
           <tr>
@@ -37,7 +38,7 @@
               </label>
             </td>
             <td>
-              <input name="password" type="password" />
+              <input name="password" type="password" required maxlength="20" />
             </td>
           </tr>
           <tr>
@@ -47,9 +48,9 @@
               </label>
             </td>
             <td>
-              <select name="id_faskes">
+              <select name="id_faskes" required>
                 {% for kode in fakseslist %}
-                  <option value="{{ kode }}">{{ kode }}</option>
+                <option value="{{ kode }}">{{ kode }}</option>
                 {% endfor %}
               </select>
             </td>
