@@ -1,0 +1,49 @@
+{% extends 'home-t2.html' %} {% load static %}
+{% block head %}
+<title>
+    List Appointment
+</title>
+{% endblock %}
+{% block meta %}
+<link rel="stylesheet" href="{% static 'css/t2.css' %}">
+{% endblock %}
+{% block subcontent %}
+
+<div class="isi">
+    <table class='t2-table table-responsive'>
+        <tr>
+            <th>No</th>
+            <th>NIK Pasien</th>
+            <th>Dokter</th>
+            <th>Faskes</th>
+            <th>Shift</th>
+            <th>Tanggal</th>
+            <th>Rekomendasi</th>
+            {% if role == 'admin_satgas' or role == 'admin_dokter' %}
+            <th>Action</th>
+            {% endif %}
+        </tr>
+        {% for j in list_appointment %}
+        <tr class="t6">
+            <td class="tdn">{{j.no}}</td>
+            <td>{{j.nik}}</td>
+            <td>{{j.dokter}}</td>
+            <td>{{j.faskes}}</td>
+            <td>{{j.shift}}</td>
+            <td>{{j.tanggal}}</td>
+            <td>{{j.rekomendasi}}</td>
+            {% if role == 'admin_dokter' %}
+            <td class="tds"><a
+                    href="{% url 't2_appointment:update_appointment' nik=j.nik email=j.dokter shift=j.shift tanggal=j.tanggal faskes=j.faskes %}">Update</a>
+            </td>
+            {% elif role == 'admin_satgas' %}
+            <td class="tds"><a
+                    href="{% url 't2_appointment:delete_appointment' nik=j.nik email=j.dokter shift=j.shift tanggal=j.tanggal faskes=j.faskes %}">Delete</a>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
