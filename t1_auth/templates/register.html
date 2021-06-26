@@ -23,18 +23,20 @@
 <div class="container">
 	<h3> Pilih Form Pendaftaran : </h3>
 	<div class="d-grid gap-2">
-		<button class="btn btn-success" type="button">
-			<a href="{% url 't1_auth:register_admin_sistem' %}">ADMIN SISTEM</a>
-		</button>
-		<button class="btn btn-success" type="button">
-			<a href="{% url 't1_auth:register_user' %}">PENGGUNA PUBLIK</a>
-		</button>
-		<button class="btn btn-success" type="button">
-			<a href="{% url 't1_auth:register_dokter' %}">DOKTER</a>
-		</button>
-		<button class="btn btn-success" type="button">
-			<a href="{% url 't1_auth:register_admin_satgas' %}">ADMIN SATGAS</a>
-		</button>
+		<a href="{% url 't1_auth:register_admin_sistem' %}"><button class="btn btn-success" style="width: 100%"
+				type="button">
+				ADMIN SISTEM
+			</button></a>
+		<a href="{% url 't1_auth:register_user' %}"><button class="btn btn-success" style="width: 100%" type="button">
+				PENGGUNA PUBLIK
+			</button></a>
+		<a href="{% url 't1_auth:register_dokter' %}"><button class="btn btn-success" style="width: 100%" type="button">
+				DOKTER
+			</button></a>
+		<a href="{% url 't1_auth:register_admin_satgas' %}"><button class="btn btn-success" style="width: 100%"
+				type="button">
+				ADMIN SATGAS
+			</button></a>
 	</div>
 	<br>
 

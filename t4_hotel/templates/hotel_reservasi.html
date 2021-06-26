@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% load widget_tweaks %}
 {% load static %}
 
 {% block head %}
-<title>Reservasi Hotel | SIRUCO</title>
+<title>Buat Reservasi Hotel | SIRUCO</title>
 <meta name="description" content="Sistem Informasi Rujukan COVID-19">
 <meta property="og:title" content="SIRUCO">
 <meta property="og:type" content="website">
@@ -11,6 +12,9 @@
 
 {% block style %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;300;400;500;600;700&display=swap"rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" />
+<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 {% endblock style %}
 
 {% block script_head %}
@@ -18,42 +22,75 @@
 {% endblock script_head %}
 
 {% block content %}
-<h1>Form Reservasi Hotel</h1>
-<ul>
-    <li>
-        <label for="patients">NIK Pasien:</label>
-        <select name="patients" id="patients">
-            {% for patient in patients %}
-            <option value="{{ patients }}">{{ patients }}</option>
-            {% endfor %}
-        </select>
-    </li>
-    <li>
-        <label for="tglmasuk">Tanggal Masuk:</label>
-        <input type="date" id="tglmasuk" name="tglmasuk">
-    </li>
-    <li>
-        <label for="tglkeluar">Tanggal Keluar:</label>
-        <input type="date" id="tglkeluar" name="tglkeluar">
-    </li>
-    <li>
-        <label for="hotels">Kode Hotel:</label>
-        <select name="hotels" id="hotels">
-            {% for code in codes %}
-            <option value="{{ code }}">{{ code }}</option>
-            {% endfor %}
-        </select>
-    </li>
-    <li>
-        <label for="rooms">Kode Ruangan:</label>
-        <select name="rooms" id="rooms" disabled>
-        </select>
-    </li>
-</ul>
-<button>Simpan Reservasi Hotel</button>
-
+<div class="container pt-10 my-12 mx-auto px-4 md:px-12">
+    <div class="mx-auto container max-w-2xl md:w-3/4 shadow-md">
+        <div class="p-4 text-3xl text-center">
+            <div class="max-w-sm mx-auto md:w-full md:mx-0">
+                <div class="inline-flex items-center space-x-4 ">
+                    <h1 class="text-gray-600">Form Reservasi Hotel</h1>
+                </div>
+            </div>
+        </div>
+        <form method="post">
+            {% csrf_token %}
+            <div class="bg-white space-y-6">
+                <div class="md:inline-flex space-y-4 md:space-y-0 w-full p-4 text-gray-500 items-center">
+                    <h2 class="md:w-1/3 max-w-sm mx-auto">NIK Pasien</h2>
+                    <div class="md:w-2/3 max-w-sm mx-auto">
+                        <div class="w-full inline-flex border">
+                            {% render_field form.nik class+="w-11/12 focus:outline-none focus:text-gray-600 p-2" placeholder="Pilih NIK Pasien" %}
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="md:inline-flex  space-y-4 md:space-y-0  w-full p-4 text-gray-500 items-center">
+                    <h2 class="md:w-1/3 mx-auto max-w-sm">Informasi Reservasi</h2>
+                    <div class="md:w-2/3 mx-auto max-w-sm space-y-5">
+                        <div>
+                            <label class="text-sm text-gray-400">Tanggal Masuk</label>
+                            <div class="w-full inline-flex border">
+                                {% render_field form.tgl_masuk class+="w-11/12 focus:outline-none focus:text-gray-600 p-2" %}
+                            </div>
+                            <label class="text-sm text-red-400">{{ form.tgl_masuk.errors }}</label>
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-400">Tanggal Keluar</label>
+                            <div class="w-full inline-flex border">
+                            {% render_field form.tgl_keluar class+="w-11/12 focus:outline-none focus:text-gray-600 p-2" %}
+                            </div>
+                            <label class="text-sm text-red-400">{{ form.tgl_keluar.errors }}</label>
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-400">Kode Hotel</label>
+                            <div class="w-full inline-flex border">
+                            {% render_field form.kode_hotel class+="w-11/12 focus:outline-none focus:text-gray-600 p-2" %}
+                            </div>
+                            <label class="text-sm text-red-400">{{ form.kode_hotel.errors }}</label>
+                        </div>
+                        <div>
+                            <label class="text-sm text-gray-400">Kode Room</label>
+                            <div class="w-full inline-flex border">
+                            {% render_field form.kode_ruangan class+="w-11/12 focus:outline-none focus:text-gray-600 p-2" %}
+                            </div>
+                            <label class="text-sm text-red-400">{{ form.kode_ruangan.errors }}</label>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="md:inline-flex w-full md:space-y-0 p-8 text-gray-500 items-center text-middle m-0">
+                    <div class="md:w-3/12 text-center md:pl-6 m-auto">
+                    <input type="submit" value="Simpan" id="submit" class="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-green-500 rounded shadow ripple hover:shadow-lg hover:bg-green-600 focus:outline-none">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock content %}
 
 {% block script_foot %}
-<script src={% static 'js/book_script.js' %}></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
+</script>
+<script src={% static 'js/reservasi.js' %} type="text/javascript"></script>
 {% endblock script_foot %}
