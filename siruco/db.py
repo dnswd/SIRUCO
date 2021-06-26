@@ -17,18 +17,18 @@ class Database:
     def __init__(self, url=getenv("DATABASE_URL"), schema=None):
         if not url:
             return None
-        
+
         self.conn = None
         self.cursor = None
         self.open(url)
-        
+
         if schema and self.cursor:
             self.query("""
                        CREATE SCHEMA IF NOT EXISTS %s
-                       """ %(schema))
+                       """ % (schema))
             self.query("""
                        SET search_path TO %s
-                       """ %(schema))
+                       """ % (schema))
             self.conn.commit()
 
     def open(self, url):
@@ -100,6 +100,11 @@ class Database:
             print(f"Can't execute query:\n{query}")
             print(error)
             return []
+
+        except AttributeError as error:
+            print("!!!!!!!!!!!!!!!!!!!!!!!")
+            print(">>> CAN'T CONNECT TO DB")
+            print("!!!!!!!!!!!!!!!!!!!!!!!")
 
     def summary(self, rows):
         # split the rows into columns
