@@ -82,6 +82,11 @@
                     <input type="submit" value="Simpan" id="submit" class="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-green-500 rounded shadow ripple hover:shadow-lg hover:bg-green-600 focus:outline-none">
                     </div>
                 </div>
+                {% if fail %}
+                <div class="text-center text-red  md:pl-6 m-auto">
+                <p class="font-bold text-red-500">Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu</p>
+                </div>
+                {% endif %}
             </div>
         </form>
     </div>

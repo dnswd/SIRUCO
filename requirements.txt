@@ -21,4 +21,8 @@ sqlparse==0.4.1
 toml==0.10.2
 urllib3==1.26.5
 whitenoise==5.2.0
+<<<<<<< HEAD
 wrapt==1.12.1
+=======
+django-widget-tweaks>=1.4.8
+>>>>>>> aa791394710858fe8be71cbb228508d77aa9a9d7

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from siruco.db import Database
 from .forms import HotelRoomForm, EditHotelRoomForm, ReservationForm, EditReservationForm, EditTransactionForm
+from datetime import datetime
 import json
 
 # Dennis Al Baihaqi Walangadi (c) 2021
@@ -119,25 +120,31 @@ def reservasi_hotel(request):
     if role is None or role not in ['admin_satgas', 'pengguna_publik']:
         return redirect('t1_auth:login')
 
+    context = {}
     if request.method == 'GET':
         form = ReservationForm()
         form.fields['nik'].choices = list_to_choice_array(list_nik_pasien())
         form.fields['kode_hotel'].choices = list_to_choice_array(
             get_hotel_codes())
-        # render form
-        return render(request, 'hotel_reservasi.html', context={'form': form})
+        context['form'] = form
+
     elif request.method == 'POST':
-        data = {}
-        create_reservasi_hotel(request.POST)
-        pass
+        tglmasuk = request.POST.get('tgl_masuk')
+        tglmasuk = datetime.strptime(tglmasuk, '%Y-%m-%d')
+        tglkeluar = request.POST.get('tgl_keluar')
+        tglkeluar = datetime.strptime(tglkeluar, '%Y-%m-%d')
+        if tglkeluar > tglmasuk:
+            create_reservasi_hotel(request.POST)
+            return redirect('t4_hotel:reservasi_index')
 
-    # if role == 'admin_satgas':
-    #     if request.method == 'UPDATE':
-    #         update_reservasi_hotel(request.POST)
-    #     elif request.method == 'DELETE':
-    #         delete_reservasi_hotel(request.POST)
+        form = ReservationForm(request.POST)
+        form.fields['nik'].choices = list_to_choice_array(list_nik_pasien())
+        form.fields['kode_hotel'].choices = list_to_choice_array(
+            get_hotel_codes())
+        context['form'] = form
+        context['fail'] = True
 
-    return redirect('t4_hotel:reservasi_index')  # refresh the form
+    return render(request, 'hotel_reservasi.html', context=context)
 
 
 def remove_reservasi_hotel(request, nik=None, tglmasuk=None):
@@ -156,9 +163,23 @@ def edit_reservasi_hotel(request, nik=None, tglmasuk=None):
     if role is None or role not in ['admin_satgas', 'pengguna_publik']:
         return redirect('t1_auth:login')
 
+    context = {}
     if request.method == 'POST':
-        update_reservasi_hotel(nik, tglmasuk, request.POST.get('tgl_keluar'))
-        return redirect('t4_hotel:reservasi_index')
+        tglmasuk = request.POST.get('tgl_masuk')
+        tglmasuk = datetime.strptime(tglmasuk, '%Y-%m-%d')
+        tglkeluar = request.POST.get('tgl_keluar')
+        tglkeluar = datetime.strptime(tglkeluar, '%Y-%m-%d')
+        if tglkeluar > tglmasuk:
+            update_reservasi_hotel(
+                nik, tglmasuk, request.POST.get('tgl_keluar'))
+            return redirect('t4_hotel:reservasi_index')
+
+        form = ReservationForm(request.POST)
+        form.fields['nik'].choices = list_to_choice_array(list_nik_pasien())
+        form.fields['kode_hotel'].choices = list_to_choice_array(
+            get_hotel_codes())
+        context['form'] = form
+        context['fail'] = True
 
     if nik and tglmasuk:
         data = get_reservasi_hotel(nik, tglmasuk)
@@ -169,8 +190,9 @@ def edit_reservasi_hotel(request, nik=None, tglmasuk=None):
             "kode_hotel": data[3],
             "kode_ruangan": data[4]
         })
+        context['form'] = form
 
-    return render(request, 'hotel_reservasi.html', context={'form': form})
+    return render(request, 'hotel_reservasi.html', context=context)
 
 
 def fetch_hotel_room(request, hotel=None):
@@ -223,7 +245,8 @@ def transaksi_booking_hotel(request):
 
     else:
         bookings = read_transaksi_booking_hotel()
-        return render(request, 'hotel_transaksi_booking.html', context={'bookings': bookings})  # show form
+        # show form
+        return render(request, 'hotel_transaksi_booking.html', context={'bookings': bookings})
 
 # Helper functions
 

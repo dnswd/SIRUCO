@@ -6,4 +6,12 @@ body {
   font-family: 'Rubik', sans-serif;
 }
 
+.dashboard{
+    padding: 2%;
+    background-color: #fffb7d;
+    border-radius: 25px;
+    min-height: 700px;
+}
+
+
 
