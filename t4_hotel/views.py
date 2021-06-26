@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from siruco.db import Database
-from .forms import HotelRoomForm, EditHotelRoomForm, ReservationForm, EditReservationForm
+from .forms import HotelRoomForm, EditHotelRoomForm, ReservationForm, EditReservationForm, EditTransactionForm
 import json
 
 # Dennis Al Baihaqi Walangadi (c) 2021
@@ -186,12 +186,34 @@ def transaksi_hotel(request):
 
     if role == 'admin_satgas':
         if request.method == 'GET':
-            return render(request, 'hotel_transaksi.html')  # render form
-        elif request.method == 'UPDATE':
-            update_transaksi_hotel(request.POST)
-    else:
-        # Automated create and delete
-        pass
+            transactions = read_transaksi_hotel()
+            context = {'transactions': transactions}
+            # render form
+        return render(request, 'hotel_transaksi_index.html', context=context)
+
+
+def transaksi_hotel_edit(request, idtransaksi=None):
+    role = request.session.get('peran')
+    if role is None or not role == 'admin_satgas':
+        return redirect('/')
+
+    if request.method == 'GET' and idtransaksi:
+        data = get_transaksi_hotel(idtransaksi=idtransaksi)
+        form = EditTransactionForm(initial={
+            'nik': data[1],
+            'idtransaksi': data[0],
+            'tglbayar': data[2],
+            'wktbayar': data[3],
+            'totalbiaya': data[4],
+            'statusbayar': data[5]
+        })
+        context = {'form': form}
+        # render form
+        return render(request, 'hotel_transaksi.html', context=context)
+    elif request.method == 'POST':
+        update_transaksi_hotel(idtransaksi, request.POST.get('statusbayar'))
+
+    return redirect('t4_hotel:transaksi_hotel')
 
 
 def transaksi_booking_hotel(request):
@@ -408,27 +430,34 @@ def create_transaksi_hotel(data):
     return
 
 
-def read_transaksi_hotel(data):
+def read_transaksi_hotel():
     db = Database(schema='siruco')
-    db.query(f'''
+    result = db.query(f'''
              SELECT * FROM TRANSAKSI_HOTEL;
              ''')
     db.close()
-    return
+    return result
 
 
-def update_transaksi_hotel(data):
+def get_transaksi_hotel(idtransaksi):
+    db = Database(schema='siruco')
+    result = db.query(f'''
+             SELECT * 
+             FROM TRANSAKSI_HOTEL
+             WHERE idtransaksi='{idtransaksi}';
+             ''')
+    db.close()
+    return result[0]
+
+
+def update_transaksi_hotel(id_transaksi, status_bayar):
     db = Database(schema='siruco')
     db.query(f'''
              UPDATE TRANSAKSI_HOTEL
              SET
-                 KodePasien = '{data.get('kode_pasien')}'
-                 TanggalPembayaran = '{data.get('tanggal_pembayaran')}'
-                 WaktuPembayaran = '{data.get('waktu_pembayaran')}'
-                 TotalBayar = '{data.get('total_bayar')}'
-                 StatusBayar = '{data.get('status_bayar')}'
+                 StatusBayar = '{status_bayar}'
              WHERE
-                 IdTransaksi = '{data.get('id_transaksi')}';
+                 IdTransaksi = '{id_transaksi}';
              ''')
     db.close()
     return

@@ -1,4 +1,4 @@
-from django.forms import Form, TextInput, NumberInput, ChoiceField, CharField, DateField
+from django.forms import Form, TextInput, NumberInput, ChoiceField, CharField, DateField, DateTimeField
 from datetime import datetime, timedelta
 
 
@@ -26,7 +26,7 @@ class EditHotelRoomForm(Form):
 
 class ReservationForm(Form):
     """
-    Create HOTEL_ROOM Form
+    Create HOTEL_RESERVATION Form
     """
     nik = ChoiceField()
     tgl_masuk = DateField(initial=datetime.today, required=True)
@@ -38,10 +38,24 @@ class ReservationForm(Form):
 
 class EditReservationForm(Form):
     """
-    Create HOTEL_ROOM Form
+    Edit HOTEL_RESERVATION Form
     """
     nik = CharField(disabled=True)
     tgl_masuk = DateField(initial=datetime.today, disabled=True)
     tgl_keluar = DateField(required=True)
     kode_hotel = CharField(disabled=True)
     kode_ruangan = CharField(disabled=True)
+
+
+class EditTransactionForm(Form):
+    """
+    Edit HOTEL_TRANSACTION Form
+    """
+    nik = CharField(disabled=True)
+    idtransaksi = CharField(disabled=True)
+    tglbayar = DateField(disabled=True)
+    wktbayar = DateTimeField(disabled=True)
+    totalbiaya = DateField(disabled=True)
+    statusbayar = CharField(required=True)
+    
+    

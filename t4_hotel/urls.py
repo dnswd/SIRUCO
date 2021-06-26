@@ -20,6 +20,8 @@ urlpatterns = [
     path('rsvp/api/<str:hotel>', views.fetch_hotel_room, name='api_fetch_room'),
 
     path('transaction/', views.transaksi_hotel, name='transaksi_hotel'),
+    path('transaction/<str:idtransaksi>', views.transaksi_hotel_edit,
+         name='transaksi_hotel_edit'),
     path('transaction/booking/', views.transaksi_booking_hotel,
          name='transaksi_booking_hotel'),
 ]
