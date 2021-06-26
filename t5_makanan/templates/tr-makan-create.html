@@ -1,9 +1,15 @@
-{% extends 'base.html' %} {% load static %} {% block meta %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+<title>Form Buat Transaksi Makan</title>
+{% endblock %}
+
+{% block script_head %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<title>
-  Form Buat Transaksi Makan
-</title>
-{% endblock %} {% block content %}
+{% endblock %}
+
+{% block content %}
 
 <table border="1px solid black" align="center">
   <tr>
@@ -21,7 +27,9 @@
               </label>
             </td>
             <td>
-              <select name="id_h" id="id_h" required>
+              <select name="id_h" id="id_h" required
+                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!')"
+                oninput="setCustomValidity('')">
                 <option selected>-- pilih id --</option>
                 {% for res in result.idhotel %}
                 <option value="{{ res }}">{{ res }}</option>
@@ -36,12 +44,7 @@
               </label>
             </td>
             <td>
-              <input
-                name="id_tm"
-                type="text"
-                readonly="readonly"
-                value="{{ result.idmakan }}"
-              />
+              <input name="id_tm" type="text" readonly="readonly" value="{{ result.idmakan }}" />
             </td>
           </tr>
           <tr>
@@ -51,23 +54,12 @@
               </label>
             </td>
             <td>
-              <input
-                name="kodeHotel"
-                type="text"
-                readonly="readonly"
-                value=""
-                id="kodeHotel"
-              />
+              <input name="kodeHotel" type="text" readonly="readonly" value="" id="kodeHotel" />
             </td>
           </tr>
-          <tr></tr>
-          <tr></tr>
-          <tr></tr>
-          <tr></tr>
-          <tr></tr>
-          <tr></tr>
-          <tr></tr>
-          <tr></tr>
+          <tr>
+            <td><br></td>
+          </tr>
           <tr>
             <td>
               <b>Pesanan:</b>
@@ -80,13 +72,9 @@
               </label>
             </td>
             <td>
-              <select
-                name="paket1"
-                class="kodePaket"
-                id="paket1"
-                required
-                oninvalid="alert('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!');"
-              >
+              <select name="paket1" class="kodePaket" id="paket1" required
+                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!')"
+                oninput="setCustomValidity('')">
                 <option value="">-- pilih paket --</option>
               </select>
             </td>
@@ -108,6 +96,12 @@
   </tr>
 </table>
 
-<script src="{% static 'js/t5_makanan.js' %}"></script>
+<div style="text-align: center;">
+  <a href="{% url 't5_makanan:index' %}#tr-makan">Kembali</a>
+</div>
 
 {% endblock %}
+
+{% block script_foot %}
+<script src="{% static 'js/t5_makanan.js' %}"></script>
+{% endblock script_foot %}
