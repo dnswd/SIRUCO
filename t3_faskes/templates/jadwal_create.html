@@ -1,0 +1,75 @@
+{% extends 'base.html' %} {% load static %} {% block head %}
+<title>
+  Pembuatan Jadwal Fasilitas Kesehatan
+</title>
+{% endblock %}
+{% block style %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<style type="text/css">
+</style>
+
+
+{% endblock %} {% block content %}
+
+<div class="container">
+	<div class="card mt-5">
+	  <div class="card-header text-white text-center bg-primary">
+	    <h3>Form Pembuatan Jadwal Fasilitas Kesehatan</h3>
+	  </div>
+
+	  <div class="card-body">
+		<form action="{% url 't3_faskes:jadwal_create' %}" method="POST">
+			{% csrf_token %}
+			<table class="table">
+                <tr>
+		            <td>
+		              <label for="kode_faskes">
+		                Faskes:
+		              </label>
+		            </td>
+		            <td>
+		              <select class='form-control' name="kode_faskes" required 
+		              oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                      oninput="setCustomValidity('')">
+		              	<option value="" disabled selected>Pilih Kode Faskes</option>
+		                {% for kode in kodefaskeslist %}
+		                  <option value="{{ kode }}">{{ kode }}</option>
+		                {% endfor %}
+		              </select>
+	           		</td>
+	          	</tr>
+			    <tr>
+			        <td>
+			          <label for="shift">Shift:</label>
+			        </td>
+			        <td>
+			          <input class='form-control' name="shift" type="text" required oninput="setCustomValidity('')"
+			          oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')">
+			   		</td>
+			  	</tr>
+                <tr>
+                    <td>
+                        <label for="tanggal">
+                            Tanggal:
+                        </label>
+                    </td>
+                    <td>
+                        <input class='form-control' name="tanggal" type="date" required maxlength="10"
+                            oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                            oninput="setCustomValidity('')">
+                    </td>
+                </tr>
+			</table>
+			<br>
+			<div class="text-center">
+				<button class="btn btn-primary" type="submit">SIMPAN</button>
+			</div>
+		</form>
+	  </div>
+	</div>
+</div>
+
+
+{% endblock %}

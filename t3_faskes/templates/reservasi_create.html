@@ -1,0 +1,178 @@
+{% extends 'base.html' %} {% load static %} {% block head %}
+<title>
+  Pembuatan Reservasi Rumah Sakit
+</title>
+{% endblock %}
+{% block style %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<style type="text/css">
+</style>
+
+
+{% endblock %} {% block content %}
+
+{% for message in messages %}
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+	{{message}}
+	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+
+<div class="container">
+	<div class="card mt-5">
+	  <div class="card-header text-white text-center bg-primary">
+	    <h3>Form Membuat Reservasi Rumah Sakit</h3>
+	  </div>
+
+	  <div class="card-body">
+        <form action="{% url 't3_faskes:reservasi_create' %}" method="POST">
+            {% csrf_token %}
+            <table class="table">
+                <tr>
+		            <td>
+		              <label for="nik">
+		                NIK Pasien:
+		              </label>
+		            </td>
+		            <td>
+		              <select name="nik" required   class='form-control' 
+		              oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                      oninput="setCustomValidity('')">
+		              	<option value="" disabled selected>Pilih NIK Pasien</option>
+		                {% for nomor in pasienlist %}
+		                  <option value="{{ nomor }}">{{ nomor }}</option>
+		                {% endfor %}
+		              </select>
+	           		</td>
+	          	</tr>
+                <tr>
+                    <td>
+                        <label for="tgl_masuk">
+                            Tanggal Masuk:
+                        </label>
+                    </td>
+                    <td>
+                        <input name="tgl_masuk" type="date" class='form-control'  required maxlength="10"
+                            oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                            oninput="setCustomValidity('')">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="tgl_keluar">
+                            Tanggal Keluar:
+                        </label>
+                    </td>
+                    <td>
+                        <input name="tgl_keluar" type="date" class='form-control'  required maxlength="10"
+                        oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                        oninput="setCustomValidity('')">
+                    </td>
+                </tr>
+                <tr>
+		            <td>
+		              <label for="kode_rs">
+		                Kode Rumah Sakit:
+		              </label>
+		            </td>
+		            <td>
+		              <select name="kode_rs" id="select_rs" class='form-control'  required
+		              oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                      oninput="setCustomValidity('')">
+		              	<option disabled value="" selected >Pilih kode Rumah Sakit</option>
+		                {% for kode in rslist %}
+		                  <option value="{{ kode }}">{{ kode }}</option>
+		                {% endfor %}
+		              </select>
+	           		</td>
+	          	</tr>
+	          	<tr>
+		            <td>
+		              <label for="kode_ruangan">
+		                Kode Ruangan:
+		              </label>
+		            </td>
+		            <td>
+		              <select name="kode_ruangan" id="select_ruangan" class='form-control'  required
+		              oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                      oninput="setCustomValidity('')">
+		              	<option disabled value="" selected >Pilih kode Ruangan</option>
+		              </select>
+	           		</td>
+	          	</tr>
+	          	<tr>
+		            <td>
+		              <label for="kode_bed">
+		                Kode Bed:
+		              </label>
+		            </td>
+		            <td>
+		              <select name="kode_bed" id="select_bed" required class='form-control' 
+		              oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')"
+                      oninput="setCustomValidity('')">
+		              	<option disabled value="" selected>Pilih kode Bed</option>
+		              </select>
+	           		</td>
+	          	</tr>
+            </table>
+			<div class="text-center">
+				<button class="btn btn-primary" type="submit">SIMPAN</button>
+			</div>
+        </form>
+	  </div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block script_foot %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$("#select_rs").change(function() {
+	var kode_rs = $(this).val();
+	var path = "/faskes/reservasi/ruangan-api/" + kode_rs + "/"
+	$.ajax({
+		url : path,
+		success : function(data){
+			console.log(data)
+			$("#select_ruangan").empty();
+			$("#select_bed").empty();
+			if (data){
+				$("#select_ruangan").append("<option selected disabled value=''>Pilih kode Ruangan</option>");
+				$("#select_bed").append("<option selected disabled value=''>Pilih kode Bed</option>");
+				for (i = 0; i < data.length; i++){
+					kode_ruangan = data[i]
+					$("#select_ruangan").append("<option value=" + kode_ruangan + ">" + kode_ruangan + "</option>")
+				}
+			} else {
+				$("#select_ruangan").append("<option selected disabled value=''>Tidak ada data ditemukan</option>");
+			}
+		}
+	})
+});
+$("#select_ruangan").change(function() {
+	var kode_rs = $("#select_rs").val();
+	var kode_ruangan = $(this).val();
+	var path = "/faskes/reservasi/bed-api/" + kode_rs + "/" + kode_ruangan + "/"
+	$.ajax({
+		url : path,
+		success : function(data){
+			console.log(data)
+			$("#select_bed").empty();
+			if (data){
+				$("#select_bed").append("<option selected disabled value=''>Pilih kode Bed</option>");
+				for (i = 0; i < data.length; i++){
+					kode_bed = data[i]
+					$("#select_bed").append("<option value=" + kode_bed + ">" + kode_bed + "</option>")
+				}
+			} else {
+				$("#select_bed").append("<option selected disabled value=''>Tidak ada data ditemukan</option>");
+			}
+		}
+	})
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+{% endblock script_foot %}

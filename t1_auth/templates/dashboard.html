@@ -42,7 +42,7 @@
 		<h2>Rumah Sakit</h2>
 		<ol>
 			<li>List Jadwal Dokter</li>
-			<li>List Reservasi RS</li>
+			<li><a href={% url 't3_faskes:reservasi' %}>List Reservasi RS</a></li>
 		</ol>
 	</li>
 	<li>
@@ -93,24 +93,24 @@
 	<li>
 		<h2>Faskes</h2>
 		<ol>
-			<li>Buat Faskes</li>
-			<li>List Faskes</li>
-			<li>Buat Jadwal Faskes</li>
-			<li>List Jadwal Faskes</li>
+			<li><a href={% url 't3_faskes:faskes_create' %}>Buat Faskes</a></li>
+			<li><a href={% url 't3_faskes:faskes' %}>List Faskes</a></li>
+			<li><a href={% url 't3_faskes:jadwal_create' %}>Buat Jadwal Faskes</a></li>
+			<li><a href={% url 't3_faskes:jadwal' %}>List Jadwal Faskes</a></li>
 		</ol>
 	</li>
 	<li>
 		<h2>Rumah Sakit</h2>
 		<ol>
-			<li>Buat RS</li>
-			<li>List RS</li>
+			<li><a href={% url 't3_faskes:rumahsakit_create' %}>Buat RS</a></li>
+			<li><a href={% url 't3_faskes:rumahsakit' %}>List RS</a></li>
 			<li>List Jadwal Dokter</li>
 			<li>Buat Ruangan RS</li>
 			<li>List Ruangan RS</li>
 			<li>Buat Bed RS</li>
 			<li>List Bed RS</li>
-			<li>Buat Reservasi RS</li>
-			<li>List Reservasi RS</li>
+			<li><a href={% url 't3_faskes:reservasi_create' %}>Buat Reservasi RS</a></li>
+			<li><a href={% url 't3_faskes:reservasi' %}>List Reservasi RS</a></li>
 		</ol>
 	</li>
 	<li>
@@ -126,7 +126,7 @@
 	<li>
 		<h2>Transaksi</h2>
 		<ol>
-			<li>List Transaksi RS</li>
+			<li><a href={% url 't3_faskes:transaksi' %}>List Transaksi RS</a></li>
 			<li>List Transaksi Hotel</li>
 			<li>List Transaksi Booking Hotel</li>
 			<li>Buat Transaksi Makan dan Daftar Pesan</li>

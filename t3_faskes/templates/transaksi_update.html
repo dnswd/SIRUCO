@@ -1,0 +1,96 @@
+{% extends 'base.html' %} {% load static %} {% block head %}
+<title>
+  Pembaruan Transaksi Rumah Sakit
+</title>
+{% endblock %}
+{% block style %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<style type="text/css">
+</style>
+
+
+{% endblock %} {% block content %}
+
+<div class="container">
+	<div class="card mt-5">
+	  <div class="card-header text-white text-center bg-primary">
+	    <h3>Form Ubah Transaksi Rumah Sakit</h3>
+	  </div>
+
+	  <div class="card-body">
+		<form action="{% url 't3_faskes:transaksi_update' pk=transaksi.id %}" method="POST">
+			{% csrf_token %}
+			<table class="table">
+			    <tr>
+			        <td>
+			          <label for="id">Id Transaksi:</label>
+			        </td>
+			        <td>
+			          <input name="id" type="text"  class='form-control'  value="{{ transaksi.id }}" disabled>
+			   		</td>
+			  	</tr>
+			    <tr>
+			        <td>
+			          <label for="kode">Kode Pasien:</label>
+			        </td>
+			        <td>
+			          <input name="kode" type="text"  class='form-control'  value="{{ transaksi.kode }}" disabled>
+			   		</td>
+			  	</tr>
+			    <tr>
+			        <td>
+			          <label for="tglmasuk">Tanggal Masuk:</label>
+			        </td>
+			        <td>
+			          <input name="tglmasuk" type="text"  class='form-control'  value="{{ transaksi.tglmasuk }}" disabled>
+			   		</td>
+			  	</tr>
+			    <tr>
+			        <td>
+			          <label for="tanggalpembayaran">Tanggal Pembayaran:</label>
+			        </td>
+			        <td>
+			          <input name="tanggalpembayaran" type="text"  class='form-control'  value="{{ transaksi.tanggalpembayaran }}" disabled>
+			   		</td>
+			  	</tr>
+			    <tr>
+			        <td>
+			          <label for="waktupembayaran">Waktu Pembayaran:</label>
+			        </td>
+			        <td>
+			          <input name="waktupembayaran" type="text"  class='form-control'  value="{{ transaksi.waktupembayaran }}" disabled>
+			   		</td>
+			  	</tr>
+			    <tr>
+			        <td>
+			          <label for="totalbiaya">Total Biaya:</label>
+			        </td>
+			        <td>
+			          <input name="totalbiaya" type="text"  class='form-control'  value="{{ transaksi.totalbiaya }}" disabled>
+			   		</td>
+			  	</tr>
+
+			    <tr>
+			        <td>
+			          <label for="statusbayar">Status Bayar:</label>
+			        </td>
+			        <td>
+			          <input name="statusbayar" type="text" class='form-control'  value="{{ transaksi.statusbayar }}" required
+			          oninput="setCustomValidity('')"
+			          oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu')">
+			   		</td>
+			  	</tr>
+			</table>
+			<br>
+			<div class="text-center">
+				<button class="btn btn-primary" type="submit">SIMPAN</button>
+			</div>
+		</form>
+	  </div>
+	</div>
+</div>
+
+
+{% endblock %}

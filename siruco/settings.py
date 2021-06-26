@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     't3_faskes',
     't4_hotel',
     't5_makanan',
-    'widget_tweaks'
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
