@@ -14,7 +14,7 @@ import json
 def index(request):
     role = request.session.get('peran')
     if role is None or role not in ['admin_satgas', 'admin_sistem', 'pengguna_publik']:
-        return redirect('t1_auth:login')
+        return redirect('t1_auth:dashboard')
 
     hotels = list_hotel_rooms()
     context = {'hotels': hotels if len(hotels) > 0 else False,
@@ -25,7 +25,7 @@ def index(request):
 def ruangan_hotel(request):
     role = request.session.get('peran')
     if role is None or role != 'admin_sistem':
-        return redirect('t1_auth:login')
+        return redirect('t1_auth:dashboard')
 
     if request.method == 'GET':
 
@@ -67,7 +67,7 @@ def ruangan_hotel(request):
 def ubah_ruangan_hotel(request, koderoom=None):
     role = request.session.get('peran')
     if role is None or role != 'admin_sistem':
-        return redirect('t1_auth:login')
+        return redirect('t1_auth:dashboard')
 
     if request.method == 'GET':
         room_data = get_room_data(koderoom)
@@ -98,7 +98,7 @@ def ubah_ruangan_hotel(request, koderoom=None):
 def remove_ruangan_hotel(request, koderoom=None):
     role = request.session.get('peran')
     if role is None or role != 'admin_sistem':
-        return redirect('t1_auth:login')
+        return redirect('t1_auth:dashboard')
 
     if koderoom:
         delete_ruangan_hotel(koderoom)
@@ -109,7 +109,7 @@ def remove_ruangan_hotel(request, koderoom=None):
 def index_reservasi(request):
     role = request.session.get('peran')
     if role is None or role not in ['admin_satgas', 'pengguna_publik']:
-        return redirect('t1_auth:login')
+        return redirect('t1_auth:dashboard')
 
     rsvp = read_reservasi_hotel()
     return render(request, 'hotel_reservasi_index.html', context={'rsvp': rsvp, 'peran': request.session['peran']})
@@ -118,7 +118,7 @@ def index_reservasi(request):
 def reservasi_hotel(request):
     role = request.session.get('peran')
     if role is None or role not in ['admin_satgas', 'pengguna_publik']:
-        return redirect('t1_auth:login')
+        return redirect('t1_auth:dashboard')
 
     context = {}
     if request.method == 'GET':
@@ -127,6 +127,7 @@ def reservasi_hotel(request):
         form.fields['kode_hotel'].choices = list_to_choice_array(
             get_hotel_codes())
         context['form'] = form
+        context['helper_script'] = True
 
     elif request.method == 'POST':
         tglmasuk = request.POST.get('tgl_masuk')
@@ -143,6 +144,7 @@ def reservasi_hotel(request):
             get_hotel_codes())
         context['form'] = form
         context['fail'] = True
+        context['helper_script'] = True
 
     return render(request, 'hotel_reservasi.html', context=context)
 
@@ -150,7 +152,7 @@ def reservasi_hotel(request):
 def remove_reservasi_hotel(request, nik=None, tglmasuk=None):
     role = request.session.get('peran')
     if role is None or role not in ['admin_satgas', 'pengguna_publik']:
-        return redirect('t1_auth:login')
+        return redirect('t1_auth:dashboard')
 
     if nik and tglmasuk:
         delete_reservasi_hotel(nik=nik, tglmasuk=tglmasuk)
@@ -161,11 +163,10 @@ def remove_reservasi_hotel(request, nik=None, tglmasuk=None):
 def edit_reservasi_hotel(request, nik=None, tglmasuk=None):
     role = request.session.get('peran')
     if role is None or role not in ['admin_satgas', 'pengguna_publik']:
-        return redirect('t1_auth:login')
+        return redirect('t1_auth:dashboard')
 
     context = {}
     if request.method == 'POST':
-        tglmasuk = request.POST.get('tgl_masuk')
         tglmasuk = datetime.strptime(tglmasuk, '%Y-%m-%d')
         tglkeluar = request.POST.get('tgl_keluar')
         tglkeluar = datetime.strptime(tglkeluar, '%Y-%m-%d')
@@ -174,10 +175,7 @@ def edit_reservasi_hotel(request, nik=None, tglmasuk=None):
                 nik, tglmasuk, request.POST.get('tgl_keluar'))
             return redirect('t4_hotel:reservasi_index')
 
-        form = ReservationForm(request.POST)
-        form.fields['nik'].choices = list_to_choice_array(list_nik_pasien())
-        form.fields['kode_hotel'].choices = list_to_choice_array(
-            get_hotel_codes())
+        form = EditReservationForm(request.POST)
         context['form'] = form
         context['fail'] = True
 

@@ -356,12 +356,13 @@ def hotel_create(request):
         noUrut = '01'
         found = False
         idx = 0
-        while (not found) and (idx < len(resKode)):
-            try:
-                noUrut = str(int(resKode[idx][0][1:]) + 1).zfill(2)
-                found = True
-            except ValueError:
-                idx += 1
+        if (resKode != None):
+            while (not found) and (idx < len(resKode)):
+                try:
+                    noUrut = str(int(resKode[idx][0][1:]) + 1).zfill(2)
+                    found = True
+                except ValueError:
+                    idx += 1
 
         response = {
             "kodehotel": "H" + noUrut
@@ -445,7 +446,7 @@ def hotel_update(request, kode):
         return HttpResponseRedirect('/makanan-hotel/#hotel')
 
 
-def index(request):
+def makanan_index(request):
 
     role = session(request, 'peran')
     username = session(request, 'username')
@@ -498,4 +499,4 @@ def index(request):
                            for h in resultH]
 
     db.close()
-    return render(request, "index.html", response)
+    return render(request, "makanan_index.html", response)

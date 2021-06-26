@@ -4,6 +4,7 @@ from . import views
 app_name = 't1_auth'
 
 urlpatterns = [
+    path('', views.home, name='home'),
     path('login', views.login, name='login'),
     path('dashboard', views.dashboard, name='dashboard'),
     path('register', views.register, name='register'),

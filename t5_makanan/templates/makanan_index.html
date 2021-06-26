@@ -6,10 +6,7 @@
 
 {% block content %}
 
-<a href="{% url 'main:home' %}">Home</a>
-<a href="{% url 't1_auth:dashboard' %}">Dashboard</a>
-
-<div style="text-align: center; margin-bottom: 10px;" id="hotel">
+<div style="text-align: center; margin-bottom: 10px; margin-top:3rem;" id="hotel">
 
     <h2 style="text-align: center; margin-bottom: 0px;">List Hotel</h2>
     {% if role == "admin_sistem" %}
@@ -18,7 +15,7 @@
 </div>
 
 {% if role == "admin_sistem" or role == "admin_satgas" or role == "pengguna_publik" %}
-<table border="1px solid black" align="center">
+<table border="1px solid black" align="center" style="margin-bottom:3rem">
     <tr>
         <th>No</th>
         <th>Kode</th>
@@ -62,7 +59,7 @@
 </div>
 
 {% if role == "admin_sistem" or role == "admin_satgas" or role == "pengguna_publik" %}
-<table border="1px solid black" align="center">
+<table border="1px solid black" align="center" style="margin-bottom:3rem">
     <tr>
         <th>No</th>
         <th>Hotel</th>
@@ -101,7 +98,7 @@
 </div>
 
 {% if role == "admin_satgas" or role == "pengguna_publik" %}
-<table border="1px solid black" align="center">
+<table border="1px solid black" align="center" style="margin-bottom:3rem">
     <tr>
         <th>No</th>
         <th>Id Transaksi Hotel</th>
@@ -132,7 +129,5 @@
 {% else %}
 <h5 style="text-align: center;">Not permitted</h5>
 {% endif %}
-
-{{role}}
 
 {% endblock %}

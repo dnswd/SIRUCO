@@ -19,5 +19,5 @@ urlpatterns = [
     path('hotel/create', hotel_create, name="hotel_create"),
     path('hotel/update/<str:kode>', hotel_update, name="hotel_update"),
 
-    path('', index, name="index"),
+    path('', makanan_index, name="makanan_index"),
 ]

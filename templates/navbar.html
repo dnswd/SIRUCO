@@ -1,0 +1,185 @@
+{% load static %}    
+<nav class="navbar navbar-expand-lg navbar-light fixed-top scrolling-navbar">
+    <div class="container">
+        <!--Navbar brand-->
+        <!-- <a class="navbar-brand font-weight-bold flex" href="{% url 't1_auth:dashboard' %}"><img src="https://img.icons8.com/fluent/48/000000/virus.png" /><span class="pt-2 pl-1">CORONA FORM</span></a> -->
+
+        <!--Collapse button if we shrink to smaller screen-->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#basicExampleNav"
+            aria-controls="basicExampleNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="basicExampleNav">
+
+            <!-- Links -->
+            <ul class="navbar-nav ml-auto smooth-scroll">
+                {% if request.session.peran == 'admin_sistem' %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Hotel
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 't5_makanan:hotel_create' %}">Buat Hotel</a>
+                        <a class="dropdown-item" href="{% url 't5_makanan:makanan_index' %}#hotel">List Hotel</a>
+                        <a class="dropdown-item" href="{% url 't4_hotel:ruangan_hotel' %}">Buat Ruangan Hotel</a>
+                        <a class="dropdown-item" href="{% url 't4_hotel:hotel_index' %}">List Ruangan Hotel</a>
+                        <a class="dropdown-item" href="{% url 't5_makanan:pm_create' %}">Buat Paket Makan</a>
+                        <a class="dropdown-item" href="{% url 't5_makanan:makanan_index' %}#paket-makan">List Paket Makan</a>
+                        <a class="dropdown-item" href="{% url 't4_hotel:reservasi_hotel' %}">Buat Reservasi Hotel</a>
+                        <a class="dropdown-item" href="{% url 't4_hotel:reservasi_index' %}">List Reservasi Hotel</a>
+                    </div>
+                </li>
+                {% elif request.session.peran == 'pengguna_publik' %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Pasien
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 't1_auth:pasien_create' %}">Pendaftaran Pasien</a>
+                        <a class="dropdown-item" href="{% url 't1_auth:pasien' %}">List Pasien</a>
+                        <a class="dropdown-item" href="{% url 't2_appointment:create_appointment' %}">Buat Appointment</a>
+                        <a class="dropdown-item" href="{% url 't2_appointment:read_appointment' %}">List Appointment</a>
+                        <a class="dropdown-item" href="">List Hasil Tes Pasien</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Rumah Sakit
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 't2_appointment:read_jadwal' %}">List Jadwal Dokter</a>
+                        <a class="dropdown-item" href="{% url 't3_faskes:reservasi' %}">List Reservasi RS</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Hotel
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 't5_makanan:makanan_index' %}#hotel">List Hotel</a>
+                        <a class="dropdown-item" href="{% url 't4_hotel:hotel_index' %}">List Ruangan Hotel</a>
+                        <a class="dropdown-item" href="{% url 't5_makanan:makanan_index' %}#paket-makan">List Paket Makan</a>
+                        <a class="dropdown-item" href="{% url 't4_hotel:reservasi_hotel' %}">Buat Reservasi Hotel</a>
+                        <a class="dropdown-item" href="{% url 't4_hotel:reservasi_index' %}">List Reservasi Hotel</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Transaksi
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="">Bayar Transaksi RS</a>
+                        <a class="dropdown-item" href="">Bayar Transaksi Hotel</a>
+                        <a class="dropdown-item" href="">List Transaksi Booking Hotel</a>
+                        <a class="dropdown-item" href="{% url 't5_makanan:tr_makan_create' %}">Buat Transaksi Makan dan Daftar Pesan</a>
+                        <a class="dropdown-item" href="{% url 't5_makanan:makanan_index' %}#tr-makan">List Transaksi Makan dan Daftar Pesan</a>
+                    </div>
+                </li>
+                {% elif request.session.peran == 'admin_dokter' %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Pasien
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 't2_appointment:read_appointment' %}">List Appointment</a>
+                        <a class="dropdown-item" href="">Buat Hasil Tes Pasien</a>
+                        <a class="dropdown-item" href="">List Hasil Tes Pasien</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Rumah Sakit
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 't2_appointment:create_jadwal' %}">Buat Jadwal Dokter</a>
+                        <a class="dropdown-item" href="{% url 't2_appointment:read_jadwal' %}">List Jadwal Dokter</a>
+                    </div>
+                </li>
+                {% elif request.session.peran == 'admin_satgas' %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Pasien
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 't2_appointment:create_appointment' %}">Buat Appointment</a>
+                        <a class="dropdown-item" href="{% url 't2_appointment:read_appointment' %}">List Appointment</a>
+                        <a class="dropdown-item" href="">List Hasil Tes Pasien</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Rumah Sakit
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 't3_faskes:rumahsakit_create' %}">Buat RS</a>
+                        <a class="dropdown-item" href="{% url 't3_faskes:rumahsakit' %}">List RS</a>
+                        <a class="dropdown-item" href="{% url 't2_appointment:read_jadwal' %}">List Jadwal Dokter</a>
+                        <a class="dropdown-item" href="{% url 't2_appointment:create_ruangan_rs' %}">Buat Ruangan RS</a>
+                        <a class="dropdown-item" href="{% url 't2_appointment:read_ruangan_rs' %}">List Ruangan RS</a>
+                        <a class="dropdown-item" href="{% url 't2_appointment:create_bed_rs' %}">Buat Bed RS</a>
+                        <a class="dropdown-item" href="{% url 't2_appointment:read_bed_rs' %}">List Bed RS</a>
+                        <a class="dropdown-item" href="{% url 't3_faskes:reservasi_create' %}">Buat Reservasi RS</a>
+                        <a class="dropdown-item" href="{% url 't3_faskes:reservasi' %}">List Reservasi RS</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Hotel
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 't5_makanan:makanan_index' %}#hotel">List Hotel</a>
+                        <a class="dropdown-item" href="{% url 't4_hotel:hotel_index' %}">List Ruangan Hotel</a>
+                        <a class="dropdown-item" href="{% url 't5_makanan:makanan_index' %}#paket-makan">List Paket Makan</a>
+                        <a class="dropdown-item" href="{% url 't4_hotel:reservasi_hotel' %}">Buat Reservasi Hotel</a>
+                        <a class="dropdown-item" href="{% url 't4_hotel:reservasi_index' %}">List Reservasi Hotel</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Faskes
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 't3_faskes:faskes_create' %}">Buat Faskes</a>
+                        <a class="dropdown-item" href="{% url 't3_faskes:faskes' %}">List Faskes</a>
+                        <a class="dropdown-item" href="{% url 't3_faskes:jadwal_create' %}">Buat Jadwal Faskes</a>
+                        <a class="dropdown-item" href="{% url 't3_faskes:jadwal' %}">List Jadwal Faskes</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle font-weight-bold" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Transaksi
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url 't3_faskes:transaksi' %}">List Transaksi RS</a>
+                        <a class="dropdown-item" href="{% url 't4_hotel:transaksi_hotel' %}">List Transaksi Hotel</a>
+                        <a class="dropdown-item" href="{% url 't4_hotel:transaksi_booking_hotel' %}">List Transaksi Booking Hotel</a>
+                        <a class="dropdown-item" href="{% url 't5_makanan:tr_makan_create' %}">Buat Transaksi Makan dan Daftar Pesan</a>
+                        <a class="dropdown-item" href="{% url 't5_makanan:makanan_index' %}#tr-makan">List Transaksi Makan dan Daftar Pesan</a>
+                    </div>
+                </li>
+                {% endif %}
+
+
+
+                {% if not request.session.peran %}
+                <li class="nav-item">
+                    <a class="nav-link font-weight-bold" href="{% url 't1_auth:login' %}">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link font-weight-bold" href="{% url 't1_auth:register' %}">Register</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link font-weight-bold" href="{% url 't1_auth:dashboard' %}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link font-weight-bold" href="{% url 't1_auth:logout' %}">Logout</a>
+                </li>
+                {% endif %}
+
+                
+                
+            </ul>
+        </div>
+    </div>
+</nav>

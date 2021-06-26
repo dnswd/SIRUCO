@@ -19,40 +19,40 @@
 	<li>
 		<h2>Hotel</h2>
 		<ol>
-			<li>Buat Hotel</li>
-			<li><a href={% url "t4_hotel:hotel_index" %}>List Hotel</a></li>
-			<li>Buat Ruangan Hotel</li>
-			<li>List Ruangan Hotel</li>
-			<li>Buat Paket Makan</li>
-			<li>List Paket Makan</li>
+			<li><a href="{% url 't5_makanan:hotel_create' %}">Buat Hotel</a></li>
+			<li><a href="{% url 't5_makanan:makanan_index' %}#hotel">List Hotel</a></li>
+			<li><a href="{% url 't4_hotel:ruangan_hotel' %}">Buat Ruangan Hotel</a></li>
+			<li><a href="{% url "t4_hotel:hotel_index" %}">List Ruangan Hotel</a></li>
+			<li><a href="{% url 't5_makanan:pm_create' %}">Buat Paket Makan</a></li>
+			<li><a href="{% url 't5_makanan:makanan_index' %}#paket-makan">List Paket Makan</a></li>
 		</ol>
 	</li>
 	{% elif peran == "pengguna_publik" %}
 	<li>
 		<h2>Pasien</h2>
 		<ol>
-			<li>Pendaftaran Pasien</li>
-			<li>List Pasien</li>
-			<li>Buat Appointment</li>
-			<li>List Appointment</li>
+			<li><a href="{% url 't1_auth:pasien_create' %}">Pendaftaran Pasien</a></li>
+			<li><a href="{% url 't1_auth:pasien' %}">List Pasien</a></li>
+			<li><a href="{% url 't2_appointment:create_appointment' %}">Buat Appointment</a></li>
+			<li><a href="{% url 't2_appointment:read_appointment' %}">List Appointment</a></li>
 			<li>List Hasil Tes Pasien</li>
 		</ol>
 	</li>
 	<li>
 		<h2>Rumah Sakit</h2>
 		<ol>
-			<li>List Jadwal Dokter</li>
+			<li><a href="{% url 't2_appointment:read_jadwal' %}">List Jadwal Dokter</a></li>
 			<li><a href={% url 't3_faskes:reservasi' %}>List Reservasi RS</a></li>
 		</ol>
 	</li>
 	<li>
 		<h2>Hotel</h2>
 		<ol>
-			<li><a href={% url "t4_hotel:hotel_index" %}>List Hotel</a></li>
-			<li>List Ruangan Hotel</li>
-			<li>List Paket Makan</li>
-			<li>Buat Reservasi Hotel</li>
-			<li>List Reservasi Hotel</li>
+			<li><a href="{% url 't5_makanan:makanan_index' %}#hotel">List Hotel</a></li>
+			<li><a href={% url "t4_hotel:hotel_index" %}>List Ruangan Hotel</a></li>
+			<li><a href="{% url 't5_makanan:makanan_index' %}#paket-makan">List Paket Makan</a></li>
+			<li><a href={% url 't4_hotel:reservasi_hotel' %}>Buat Reservasi Hotel</a></li>
+			<li><a href={% url 't4_hotel:reservasi_index' %}>List Reservasi Hotel</a></li>
 		</ol>
 	</li>
 	<li>
@@ -61,15 +61,15 @@
 			<li>Bayar Transaksi RS</li>
 			<li>Bayar Transaksi Hotel</li>
 			<li>List Transaksi Booking Hotel</li>
-			<li>Buat Transaksi Makan dan Daftar Pesan</li>
-			<li>List Transaksi Makan dan Daftar Pesan</li>
+			<li><a href="{% url 't5_makanan:tr_makan_create' %}">Buat Transaksi Makan dan Daftar Pesan</a></li>
+			<li><a href="{% url 't5_makanan:makanan_index' %}#tr-makan">List Transaksi Makan dan Daftar Pesan</a></li>
 		</ol>
 	</li>
 	{% elif peran == "admin_dokter" %}
 	<li>
 		<h2>Pasien</h2>
 		<ol>
-			<li>List Appointment</li>
+			<li><a href="{% url 't2_appointment:read_appointment' %}">List Appointment</a></li>
 			<li>Buat Hasil Tes Pasien</li>
 			<li>List Hasil Tes Pasien</li>
 		</ol>
@@ -77,16 +77,15 @@
 	<li>
 		<h2>Rumah Sakit</h2>
 		<ol>
-			<li>Buat Jadwal Dokter</li>
-			<li>List Jadwal Dokter</li>
+			<li><a href="{% url 't2_appointment:create_jadwal' %}">Buat Jadwal Dokter</a></li>
+			<li><a href="{% url 't2_appointment:read_jadwal' %}">List Jadwal Dokter</a></li>
 		</ol>
 	</li>
 	{% elif peran == "admin_satgas" %}
 	<li>
 		<h2>Pasien</h2>
 		<ol>
-			<li>Buat Appointment</li>
-			<li>List Appointment</li>
+			<li><a href="{% url 't2_appointment:create_appointment' %}">Buat Appointment</a></li>
 			<li>List Hasil Tes Pasien</li>
 		</ol>
 	</li>
@@ -104,11 +103,11 @@
 		<ol>
 			<li><a href={% url 't3_faskes:rumahsakit_create' %}>Buat RS</a></li>
 			<li><a href={% url 't3_faskes:rumahsakit' %}>List RS</a></li>
-			<li>List Jadwal Dokter</li>
-			<li>Buat Ruangan RS</li>
-			<li>List Ruangan RS</li>
-			<li>Buat Bed RS</li>
-			<li>List Bed RS</li>
+			<li><a href="{% url 't2_appointment:read_jadwal' %}">List Jadwal Dokter</a></li>
+			<li><a href="{% url 't2_appointment:create_ruangan_rs' %}">Buat Ruangan RS</a></li>
+			<li><a href="{% url 't2_appointment:read_ruangan_rs' %}">List Ruangan RS</a></li>
+			<li><a href="{% url 't2_appointment:create_bed_rs' %}">Buat Bed RS</a></li>
+			<li><a href="{% url 't2_appointment:read_bed_rs' %}">List Bed RS</a></li>
 			<li><a href={% url 't3_faskes:reservasi_create' %}>Buat Reservasi RS</a></li>
 			<li><a href={% url 't3_faskes:reservasi' %}>List Reservasi RS</a></li>
 		</ol>
@@ -116,21 +115,21 @@
 	<li>
 		<h2>Hotel</h2>
 		<ol>
-			<li><a href={% url "t4_hotel:hotel_index" %}>List Hotel</a></li>
-			<li>List Ruangan Hotel</li>
-			<li>List Paket Makan</li>
-			<li>Buat Reservasi Hotel</li>
-			<li>List Reservasi Hotel</li>
+			<li><a href="{% url 't5_makanan:makanan_index' %}#hotel">List Hotel</a></li>
+			<li><a href={% url "t4_hotel:hotel_index" %}>List Ruangan Hotel</a></li>
+			<li><a href="{% url 't5_makanan:makanan_index' %}#paket-makan">List Paket Makan</a></li>
+			<li><a href={% url 't4_hotel:reservasi_hotel' %}>Buat Reservasi Hotel</a></li>
+			<li><a href={% url 't4_hotel:reservasi_index' %}>List Reservasi Hotel</a></li>
 		</ol>
 	</li>
 	<li>
 		<h2>Transaksi</h2>
 		<ol>
 			<li><a href={% url 't3_faskes:transaksi' %}>List Transaksi RS</a></li>
-			<li>List Transaksi Hotel</li>
-			<li>List Transaksi Booking Hotel</li>
-			<li>Buat Transaksi Makan dan Daftar Pesan</li>
-			<li>List Transaksi Makan dan Daftar Pesan</li>
+			<li><a href={% url 't4_hotel:transaksi_hotel' %}>List Transaksi Hotel</a></li>
+			<li><a href={% url 't4_hotel:transaksi_booking_hotel' %}>List Transaksi Booking Hotel</a></li>
+			<li><a href="{% url 't5_makanan:tr_makan_create' %}">Buat Transaksi Makan dan Daftar Pesan</a></li>
+			<li><a href="{% url 't5_makanan:makanan_index' %}#tr-makan">List Transaksi Makan dan Daftar Pesan</a></li>
 		</ol>
 	</li>
 	{% endif %}

@@ -2,6 +2,12 @@ from django.shortcuts import render, redirect
 from siruco.db import Database
 
 
+def home(request):
+    if session(request, 'peran'):
+        return redirect('/dashboard')
+    return redirect('/login')
+
+
 def login(request):
     request.session.clear_expired()
     if session(request, 'peran'):
@@ -19,7 +25,7 @@ def login(request):
             session(request, 'peran', user[1])
             if is_admin(username, password):
                 session(request, 'su', 1)
-            return redirect('/account/dashboard')
+            return redirect('/dashboard')
 
         return render(request, 'login.html', {"error": True})
 
@@ -71,7 +77,7 @@ def register(request):
                     status = record_as_admin_satgas(request.POST)
                 elif request.POST.get('peran') != 'admin_sistem':
                     # TODO: proper redirect to form
-                    return redirect('/account/register')
+                    return redirect('/register')
 
             session(request, 'nama', request.POST.get('nama'))
             session(request, 'username', request.POST.get('email'))
@@ -145,7 +151,7 @@ def pasien_create(request):
         ''')
 
         db.close()
-        return redirect('/account/pasien')
+        return redirect('/pasien')
 
 
 def pasien(request):
@@ -215,7 +221,7 @@ def pasien_update(request, nik):
         ''')
 
         db.close()
-        return redirect('/account/pasien')
+        return redirect('/pasien')
 
 
 def pasien_detail(request, nik):
@@ -261,7 +267,7 @@ def pasien_delete(request, nik):
     ''')
 
     db.close()
-    return redirect('/account/pasien')
+    return redirect('/pasien')
 
 # Helper functions
 

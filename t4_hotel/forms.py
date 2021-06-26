@@ -41,7 +41,7 @@ class EditReservationForm(Form):
     Edit HOTEL_RESERVATION Form
     """
     nik = CharField(disabled=True)
-    tgl_masuk = DateField(initial=datetime.today, disabled=True)
+    tgl_masuk = DateField(disabled=True)
     tgl_keluar = DateField(required=True)
     kode_hotel = CharField(disabled=True)
     kode_ruangan = CharField(disabled=True)
@@ -57,5 +57,3 @@ class EditTransactionForm(Form):
     wktbayar = DateTimeField(disabled=True)
     totalbiaya = DateField(disabled=True)
     statusbayar = CharField(required=True)
-    
-    

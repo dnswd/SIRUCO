@@ -6,12 +6,11 @@
 {% endblock %}
 
 {% block script_head %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 {% endblock %}
 
 {% block content %}
 
-<table border="1px solid black" align="center">
+<table border="1px solid black" align="center" style="margin-top:3rem">
   <tr>
     <th>FORM BUAT TRANSAKSI MAKAN</th>
   </tr>
@@ -97,11 +96,9 @@
 </table>
 
 <div style="text-align: center;">
-  <a href="{% url 't5_makanan:index' %}#tr-makan">Kembali</a>
+  <a href="{% url 't5_makanan:makanan_index' %}#tr-makan">Kembali</a>
 </div>
 
-{% endblock %}
-
-{% block script_foot %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="{% static 'js/t5_makanan.js' %}"></script>
-{% endblock script_foot %}
+{% endblock %}

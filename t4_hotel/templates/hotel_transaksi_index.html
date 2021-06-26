@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block head %}
-<title>Hotel | SIRUCO</title>
+<title>Transaksi Hotel | SIRUCO</title>
 <meta name="description" content="Sistem Informasi Rujukan COVID-19">
 <meta property="og:title" content="SIRUCO">
 <meta property="og:type" content="website">
@@ -22,17 +22,8 @@
 {% endblock script_head %}
 
 {% block content %}
-<h1>List Hotel</h1>
-<p>Menu yang tersedia:</p>
-<ul>
-    <li><a href={% url "t4_hotel:ruangan_hotel" %}>Buat Ruangan Hotel</a></li>
-    <li><a href={% url "t4_hotel:reservasi_hotel" %}>Reservasi Hotel</a></li>
-    <li><a href={% url "t4_hotel:transaksi_hotel" %}>Transaksi Hotel</a></li>
-    <li><a href={% url "t4_hotel:transaksi_booking_hotel" %}>Transaksi Booking Hotel</a></li>
-</ul>
-
 {% if transactions %}
-<h3>DAFTAR HOTEL</h3>
+<h1>DAFTAR TRANSAKSI HOTEL</h1>
 <table style="mx-auto max-w-4xl w-full whitespace-nowrap rounded-lg bg-white divide-y divide-gray-300 overflow-hidden">
 <thead class="bg-gray-400">
   <tr>
