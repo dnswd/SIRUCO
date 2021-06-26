@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>List Hotel, Paket Makan dan Transaksi Makan</title>
+{% endblock %}
+
+{% block content %}
+
+<a href="{% url 'main:home' %}">Home</a>
+<a href="{% url 't1_auth:dashboard' %}">Dashboard</a>
+
+<div style="text-align: center; margin-bottom: 10px;" id="hotel">
+
+    <h2 style="text-align: center; margin-bottom: 0px;">List Hotel</h2>
+    {% if role == "admin_sistem" %}
+    <a href="{% url 't5_makanan:hotel_create' %}">Create</a>
+    {% endif %}
+</div>
+
+{% if role == "admin_sistem" or role == "admin_satgas" or role == "pengguna_publik" %}
+<table border="1px solid black" align="center">
+    <tr>
+        <th>No</th>
+        <th>Kode</th>
+        <th>Hotel</th>
+        <th>Rujukan</th>
+        <th>Alamat</th>
+        {% if role == "admin_sistem" %}
+        <th>Action</th>
+        {% endif %}
+    </tr>
+    {% for hotel in resultH %}
+    <tr align="center">
+        <td>{{ forloop.counter }}</td>
+        <td>{{ hotel.kode }}</td>
+        <td>{{ hotel.nama }}</td>
+        <td>
+            {% if hotel.rujukan == "1" %}
+            <input type="checkbox" checked disabled>
+            {% else %}
+            <input type="checkbox" disabled>
+            {% endif %}
+        </td>
+        <td style="word-wrap: break-word; max-width: 300px;">{{ hotel.alamat }}</td>
+        {% if role == "admin_sistem" %}
+        <td>
+            <a href="{% url 't5_makanan:hotel_update' kode=hotel.kode %}">Update</a><br />
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<h5 style="text-align: center;">Not permitted</h5>
+{% endif %}
+
+<div style="text-align: center; margin-bottom: 10px;" id="paket-makan">
+    <h2 style="text-align: center; margin-bottom: 0px;">List Paket Makan</h2>
+    {% if role == "admin_sistem" %}
+    <a href="{% url 't5_makanan:pm_create' %}">Create</a>
+    {% endif %}
+</div>
+
+{% if role == "admin_sistem" or role == "admin_satgas" or role == "pengguna_publik" %}
+<table border="1px solid black" align="center">
+    <tr>
+        <th>No</th>
+        <th>Hotel</th>
+        <th>Kode Paket</th>
+        <th>Nama Paket</th>
+        <th>Harga</th>
+        {% if role == "admin_sistem" %}
+        <th>Action</th>
+        {% endif %}
+    </tr>
+    {% for res in resultPM %}
+    <tr align="center">
+        <td>{{ forloop.counter }}</td>
+        <td>{{ res.kodeHotel }}</td>
+        <td>{{ res.kodePaket }}</td>
+        <td>{{ res.namaPaket }}</td>
+        <td>{{ res.harga }}</td>
+        {% if role == "admin_sistem" %}
+        <td>
+            <a href="{% url 't5_makanan:pm_update' kh=res.kodeHotel kp=res.kodePaket %}">Update</a><br />
+            <a href="{% url 't5_makanan:pm_delete' kh=res.kodeHotel kp=res.kodePaket %}">Delete</a><br />
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<h5 style="text-align: center;">Not permitted</h5>
+{% endif %}
+
+<div style="text-align: center; margin-bottom: 10px;" id="tr-makan">
+    <h2 style="text-align: center; margin-bottom: 0px;">List Transaksi Makan</h2>
+    {% if role == "admin_satgas" or role == "pengguna_publik" %}
+    <a href="{% url 't5_makanan:tr_makan_create' %}">Create</a>
+    {% endif %}
+</div>
+
+{% if role == "admin_satgas" or role == "pengguna_publik" %}
+<table border="1px solid black" align="center">
+    <tr>
+        <th>No</th>
+        <th>Id Transaksi Hotel</th>
+        <th>Id Transaksi Makan</th>
+        <th>Total Bayar</th>
+        <th>Action</th>
+    </tr>
+    {% for res in resultTM %}
+    <tr align="center">
+        <td>{{ forloop.counter }}</td>
+        <td>{{ res.idtransaksi }}</td>
+        <td>{{ res.idtransaksimakan }}</td>
+        <td>{{ res.totalbayar }}</td>
+        <td>
+            {% if res.status != "Lunas" %}
+            {% if role == "admin_satgas" %}
+            <a
+                href="{% url 't5_makanan:tr_makan_update' id_t=res.idtransaksi id_tm=res.idtransaksimakan %}">Update</a><br />
+            <a
+                href="{% url 't5_makanan:tr_makan_delete' id_t=res.idtransaksi id_tm=res.idtransaksimakan %}">Delete</a><br />
+            {% endif %}
+            {% endif %}
+            <a href="{% url 't5_makanan:tr_makan_detail' id_t=res.idtransaksi id_tm=res.idtransaksimakan %}">Detail</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<h5 style="text-align: center;">Not permitted</h5>
+{% endif %}
+
+{{role}}
+
+{% endblock %}

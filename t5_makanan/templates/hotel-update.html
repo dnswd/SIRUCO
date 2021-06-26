@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Form Ubah Data Hotel</title>
+{% endblock %}
+
+{% block content %}
+
+<table border="1px solid black" align="center">
+    <tr>
+        <th>FORM UBAH DATA HOTEL</th>
+    </tr>
+    <tr>
+        <td>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <table>
+                    <tr>
+                        <td>
+                            <label for="kode">
+                                <b>Kode Hotel:</b>
+                            </label>
+                        </td>
+                        <td>
+                            <input name="kode" type="text" readonly="readonly" value="{{ kode }}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="nama">
+                                <b>Nama Hotel:</b>
+                            </label>
+                        </td>
+                        <td>
+                            <input name="nama" type="text" maxlength="30" required
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!')"
+                                oninput="setCustomValidity('')" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="rujukan">
+                                <b>Rujukan:</b>
+                            </label>
+                        </td>
+                        <td>
+                            <input name="rujukan" type="checkbox">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>Alamat: </b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="jalan">
+                                <b>Jalan:</b>
+                            </label>
+                        </td>
+                        <td>
+                            <input name="jalan" type="text" maxlength="30" required
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!')"
+                                oninput="setCustomValidity('')" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="kelurahan">
+                                <b>Kelurahan:</b>
+                            </label>
+                        </td>
+                        <td>
+                            <input name="kelurahan" type="text" maxlength="30" required
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!')"
+                                oninput="setCustomValidity('')" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="kecamatan">
+                                <b>Kecamatan:</b>
+                            </label>
+                        </td>
+                        <td>
+                            <input name="kecamatan" type="text" maxlength="30" required
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!')"
+                                oninput="setCustomValidity('')" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="kabkot">
+                                <b>Kabupaten/Kota:</b>
+                            </label>
+                        </td>
+                        <td>
+                            <input name="kabkot" type="text" maxlength="30" required
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!')"
+                                oninput="setCustomValidity('')" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="provinsi">
+                                <b>Provinsi:</b>
+                            </label>
+                        </td>
+                        <td>
+                            <input name="provinsi" type="text" maxlength="30" required
+                                oninvalid="this.setCustomValidity('Data yang diisikan belum lengkap, silahkan lengkapi data terlebih dahulu!!!')"
+                                oninput="setCustomValidity('')" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><br></td>
+                    </tr>
+                </table>
+                <div style="text-align: center">
+                    <button type="submit">
+                        SIMPAN
+                    </button>
+                </div>
+            </form>
+        </td>
+    </tr>
+</table>
+
+<div style="text-align: center;">
+    <a href="{% url 't5_makanan:index' %}#hotel">Kembali</a>
+</div>
+
+{% endblock %}
